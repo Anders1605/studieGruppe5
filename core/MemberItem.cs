@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace core
 {
-    internal class MemberItem
+    public class MemberItem
     {
         public int Memberid { get; set; }
         public string Name { get; set; } = string.Empty;
