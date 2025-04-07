@@ -7,10 +7,10 @@ namespace ClothesClub.Interfaces
     {
         public List<ClothingItem> GetAll(List<ClothingItem> storedList);
 
-        public Task AddClothingItem(ClothingItem item, List<ClothingItem> storedList);
+        public void AddClothingItem(ClothingItem item, List<ClothingItem> storedList);
 
         public void RemoveClothingItem(ClothingItem item, List<ClothingItem> storedList);
 
-        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList, List<ClothingItem> LentList);
+        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList);
     }
 }
