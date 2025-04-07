@@ -31,13 +31,9 @@ namespace ClothesClub.Services
 
         public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList, List<ClothingItem> LentList)
         {
-            if (item.LentOut == true)
-            {
-                LentList.Add(item);
-                LentList.Add(new ClothingItem() { Type = item.Type, Size = item.Size, Color = item.Color, ClothingId = item.ClothingId, Image = item.Image, LentOut = item.LentOut, OwnerId = item.OwnerId });
-                storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
-                GetAll(storedList);
-            }
+            item.LentOut = true;
+            storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
+            storedList = localStore.SetItemAsync<List<ClothingItem>>("ClothingStorage", storedList);
         }
 
         public void RemoveClothingItem(ClothingItem item, List<ClothingItem> storedList)
