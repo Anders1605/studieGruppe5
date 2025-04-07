@@ -1,11 +1,11 @@
 ﻿@page "/memberoverview"
 @attribute [StreamRendering]
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>Members</PageTitle>
 
 <h1>Weather</h1>
 
-<p>This component demonstrates showing data.</p>
+<p>OverView of Members</p>
 
 @if (forecasts == null)
 {
@@ -16,10 +16,9 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>PhoneNumber</th>
             </tr>
         </thead>
         <tbody>
@@ -29,7 +28,6 @@ else
                     <td>@forecast.Date.ToShortDateString()</td>
                     <td>@forecast.TemperatureC</td>
                     <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
                 </tr>
             }
         </tbody>
