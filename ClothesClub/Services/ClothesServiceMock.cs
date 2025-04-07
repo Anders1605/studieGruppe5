@@ -1,28 +1,49 @@
-﻿using ClothesClub.Interfaces;
+﻿using System.Reflection.Metadata;
+using System.Threading.Tasks;
+using ClothesClub.Interfaces;
 using core;
+//using Blazored.LocalStorage.ILocalStorageService localStore;
 
 namespace ClothesClub.Services
 {
     public class ClothesServiceMock : IClothesService
     {
-        public void AddClothingItem(ClothingItem item)
+     
+        public async Task AddClothingItem(ClothingItem item, List<ClothingItem> storedList)
         {
-            throw new NotImplementedException();
+            ClothingItem clothingItem = new();
+            storedList.Add(new ClothingItem() { Type = item.Type, Size = item.Size, Color = item.Color, ClothingId = item.ClothingId, Image = item.Image, LentOut = item.LentOut, OwnerId = item.OwnerId});
+            storedList = await localStore.SetItemAsync<List<ClothingItem>>("ClothingStorage", storedList);
+            GetAll(storedList);
         }
 
-        public List<ClothingItem> GetAll()
+        public List<ClothingItem> GetAll(List<ClothingItem> storedList)
         {
-            throw new NotImplementedException();
+            storedList = localStore.GetItemAsync<List<ClothingItem>>("ClothingStorage");
+            if (storedList != null)
+            {
+                return storedList;
+            } else
+            {
+                //Codepath mangler
+            }
         }
 
-        public void LentOutClothingItem(ClothingItem item)
+        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList, List<ClothingItem> LentList)
         {
-            throw new NotImplementedException();
+            if (item.LentOut == true)
+            {
+                LentList.Add(item);
+                LentList.Add(new ClothingItem() { Type = item.Type, Size = item.Size, Color = item.Color, ClothingId = item.ClothingId, Image = item.Image, LentOut = item.LentOut, OwnerId = item.OwnerId });
+                storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
+                GetAll(storedList);
+            }
         }
 
-        public void RemoveClothingItem(ClothingItem item)
+        public void RemoveClothingItem(ClothingItem item, List<ClothingItem> storedList)
         {
-            throw new NotImplementedException();
+            storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
+            GetAll(storedList);
         }
     }
 }
