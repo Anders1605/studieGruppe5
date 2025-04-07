@@ -5,12 +5,12 @@ namespace ClothesClub.Interfaces
 {
     public interface IClothesService
     {
-        public List<ClothingItem> GetAll();
+        public List<ClothingItem> GetAll(List<ClothingItem> storedList);
 
-        public void AddClothingItem(ClothingItem item);
+        public Task AddClothingItem(ClothingItem item, List<ClothingItem> storedList);
 
-        public void RemoveClothingItem(ClothingItem item);
+        public void RemoveClothingItem(ClothingItem item, List<ClothingItem> storedList);
 
-        public void LentOutClothingItem(ClothingItem item);
+        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList, List<ClothingItem> LentList);
     }
 }
