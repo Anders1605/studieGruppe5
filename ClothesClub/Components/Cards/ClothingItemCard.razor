@@ -1,0 +1,31 @@
+﻿@using core
+@if (clothingItemToDisplay is not null)
+{
+    
+<div class="card">
+    <img class="card-img-top" src="@clothingItemToDisplay.Image" alt="No Image to Display" />
+    <div class="card-body">
+        @if (clothingItemToDisplay.LentOut is false)
+        {
+            <div class="card-title" style="color:forestgreen"> Available </div>
+        }
+        else
+        {
+            <div class="card-title" style="color:dimgray"> Unavailable </div>
+
+        }
+
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Type: @clothingItemToDisplay.Type</li>
+            <li class="list-group-item"> Size: @clothingItemToDisplay.Size</li>
+            <li class="list-group-item"> Color: @clothingItemToDisplay.Color</li>
+        </ul>
+    </div>
+</div>
+}
+
+
+@code {
+    [Parameter]
+    public ClothingItem? clothingItemToDisplay { get; set; }
+}

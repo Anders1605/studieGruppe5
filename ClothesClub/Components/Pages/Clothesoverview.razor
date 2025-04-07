@@ -1,19 +1,40 @@
 ﻿@page "/clothesoverview"
+@using ClothesClub.Interfaces
+@using core
+@inject IClothesService ClothingService
 @rendermode InteractiveServer
 
-<PageTitle>Counter</PageTitle>
-
-<h1>Counter</h1>
-
-<p role="status">Current count: @currentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
-
+<PageTitle>Clothing Overview</PageTitle>
+@while (ItemsToDisplay is null)
+{
+    <p>Waiting for component to load</p>
+}
+@foreach (var clothingItems in ItemsToDisplay)
+{
+    <ClothesClub.Components.Cards.ClothingItemCard @clothingItemToDisplay="@clothingItems"></ClothesClub.Components.Cards.ClothingItemCard>
+    <button class="btn-primary" @onclick=" () => LentClothingItem(clothingItems)"></button>
+}
 @code {
-    private int currentCount = 0;
+    List<ClothingItem> ItemsToDisplay;
+    List<ClothingItem> LentedItems;
 
-    private void IncrementCount()
+    protected override void OnInitialized()
     {
-        currentCount++;
+        base.OnInitialized();
+        RefreshList();
     }
+
+    private void LentClothingItem(ClothingItem itemToLent)
+    {
+        ClothingService.LentOutClothingItem(itemToLent);
+        RefreshList();
+    }
+
+    private void RefreshList()
+    {
+        ItemsToDisplay = ClothingService.GetAll();
+    }
+
+
+
 }
