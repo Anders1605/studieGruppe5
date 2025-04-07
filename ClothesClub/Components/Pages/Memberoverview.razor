@@ -1,64 +1,80 @@
-﻿@page "/memberoverview"
-@attribute [StreamRendering]
+﻿@using core
+@using ClothesClub.Interfaces
+@page "/memberoverview"
+@inject IMemberService MemberService
 
-<PageTitle>Weather</PageTitle>
 
-<h1>Weather</h1>
+<PageTitle>Members</PageTitle>
 
-<p>This component demonstrates showing data.</p>
+<h1>Members</h1>
 
-@if (forecasts == null)
+<p>OverView of Members</p>
+
+@if (membersSaved == null || membersSaved.Count == 0)
 {
-    <p><em>Loading...</em></p>
+	<p><em>No members found.</em></p>
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var forecast in forecasts)
-            {
-                <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>PhoneNumber</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var member in membersSaved)
+			{
+				<tr>
+					<td>@member.Name</td>
+					<td>@member.Email</td>
+					<td>@member.Phonenumber</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 }
-
+<EditForm Model="@newmember" OnSubmit="@HandleSubmit" class="row p-3">
+<div>
+	<label for="Description">Description</label>
+	<InputText @bind-value="newmember.Name" placeholder="Name" class="form-control mb-1" />
+	</div>
+	<div>
+	<label for="Description">Description</label>
+	<InputText @bind-value="newmember.Email" placeholder="Email" class="form-control mb-1" />
+	</div>
+	<div>
+	<label for="Description">Description</label>
+	<InputText @bind-value="newmember.Phonenumber" placeholder="Phone Number" class="form-control mb-2" />
+	</div>
+	<input type="submit" class="btn btn-primary" value="Submit"/>
+</EditForm>
 @code {
-    private WeatherForecast[]? forecasts;
+	private List<MemberItem> membersSaved = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        // Simulate asynchronous loading to demonstrate streaming rendering
-        await Task.Delay(500);
+	protected override void OnInitialized()
+	{
+		membersSaved = MemberService.GetAll();
+	}
+	private MemberItem newmember = new();
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
-    }
+	// 🔹 NYT: Liste til at gemme produkter
+	private List<MemberItem> productList = new();
 
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-    }
+
+	private string message = "";
+
+	private void HandleSubmit()
+	{
+		productList.Add(newmember);
+
+		newmember = new MemberItem();
+
+
+		message = "Product added successfully!";
+	}
 }
+
+
