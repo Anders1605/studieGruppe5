@@ -1,23 +1,31 @@
 ﻿using ClothesClub.Interfaces;
 using System.Reflection;
+using core;
 
 namespace ClothesClub.Services
 {
     public class MemberServiceMock : IMemberService
     {
-        public void CreateMember(MemberInfo member)
+        private List<MemberItem> Members = new();
+       
+        public void CreateMember(MemberItem member)
         {
-            throw new NotImplementedException();
+            int max = 0;
+            if (Members.Count > 0)
+                max = Members.Select(b => b.Memberid).Max();
+            member.Memberid = max + 1;
+            Members.Add(member);
         }
 
-        public List<MemberInfo> GetAll()
+
+        public List<MemberItem> GetAll()
         {
-            throw new NotImplementedException();
+            return Members.ToList();
         }
 
-        public void RemoveMember(MemberInfo member)
+        public void RemoveMember(MemberItem membertoremove)
         {
-            throw new NotImplementedException();
+            Members.Remove(membertoremove);
         }
     }
 }
