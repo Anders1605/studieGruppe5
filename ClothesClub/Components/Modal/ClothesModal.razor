@@ -1,0 +1,78 @@
+﻿@using core;
+@using Interfaces;
+@inject Interfaces.IClothesService ClothingService;
+@inject IJSRuntime JSRuntime;
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ClothesModal">
+    Launch clothes modal
+</button>
+<div class="modal fade" id="ClothesModal" tabindex="-1" aria-labelledby="ClothesModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="ClothesModalLabel">Item Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="itemForm">
+                    <div class="mb-3">
+                        <label for="type" class="form-label">Type</label>
+                        <input type="text" class="form-control" id="type" @bind-value="Clothes.Type" name="type" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="size" class="form-label">Size</label>
+                        <input type="text" class="form-control" id="size" @bind-value="Clothes.Size" name="size" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="color" class="form-label">Color</label>
+                        <input type="text" class="form-control" id="color" @bind-value="Clothes.Color" name="color" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image" class="form-label">Image URL</label>
+                        <input type="text" class="form-control" id="image" @bind-value="Clothes.Image" name="image" placeholder="exampleURLforImage">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lentOut" class="form-label">Lent Out</label>
+                        <select class="form-select" id="lentOut" @bind="Clothes.LentOut" name="lentOut">
+                            <option value="true">True</option>
+                            <option value="false">False</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="itemForm" class="btn btn-primary" @onclick="SaveChanges">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@foreach(var c in Mock)
+  {
+        <p>c.Type</p>
+        <p>c.Size</p>
+        <p>c.Color</p>
+        <p>c.Image</p>
+        <p>c.LentOut</p>
+        <p>c.OwnerId</p>
+  }  
+
+@code {
+    ClothingItem Clothes = new();
+    /*Indsæt liste fra Clothesoverview*/
+    List<ClothingItem> Mock = new();
+
+    public void SaveChanges ()
+    {
+        OnClick(Clothes);
+    }
+
+    public void OnClick (ClothingItem c)
+    {
+        ClothingService.AddClothingItem(c, Mock);
+        ClothingService.GetAll(Mock);
+    }
+    
+    
+}

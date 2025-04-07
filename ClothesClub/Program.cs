@@ -1,5 +1,7 @@
 using Blazored.LocalStorage;
 using ClothesClub.Components;
+using ClothesClub.Interfaces;
+using ClothesClub.Services;
 
 namespace ClothesClub
 {
@@ -12,8 +14,10 @@ namespace ClothesClub
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddSingleton<Interfaces.IClothesService, ClothesServiceMock>();
             var app = builder.Build();
+
+
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
