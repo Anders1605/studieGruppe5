@@ -29,7 +29,7 @@ namespace ClothesClub.Services
             }
         }
 
-        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList, List<ClothingItem> LentList)
+        public void LentOutClothingItem(ClothingItem item, List<ClothingItem> storedList)
         {
             item.LentOut = true;
             storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
