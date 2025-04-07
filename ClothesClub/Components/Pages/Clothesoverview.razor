@@ -10,13 +10,14 @@
 {
     <p>Waiting for component to load</p>
 }
-<div class="container-fluid">
-    
-    <button class="btn btn-primary" data-toggle="modal" data-target="@"></button>
+<div class="container-fluid" style=" float:right">
+
     @foreach (var clothingItems in ItemsToDisplay)
     {
-        <ClothingItemCard @clothingItemToDisplay="@clothingItems"></ClothingItemCard>
-        <button class="btn-primary" @onclick=" () => LentClothingItem(clothingItems)"></button>
+        <div class="border-1" style="border-block-color:black">
+            <ClothingItemCard clothingItemToDisplay="@clothingItems"></ClothingItemCard>
+            <button class="btn-primary" @onclick=" () => LentClothingItem(clothingItems)"> Lent Item</button>
+        </div>
     }
 </div>
 
@@ -26,12 +27,16 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        RefreshList();
+        ItemsToDisplay = new List<ClothingItem>()
+        {
+            new ClothingItem() {Size = "XL",Type = "Shirt",Color = "Red", LentOut = false},
+            new ClothingItem(){Size="L",Type = "Skirt",Color ="Blue", LentOut = false}
+        };
     }
 
     private void AddClothingItem()
     {
-        
+
     }
     private void LentClothingItem(ClothingItem itemToLent)
     {
