@@ -16,6 +16,8 @@ namespace ClothesClub
                 .AddInteractiveServerComponents();
             builder.Services.AddBlazoredLocalStorage();
 
+            builder.Services.AddSingleton<IMemberService, MemberServiceMock>();
+
             builder.Services.AddSingleton< IClothesService,ClothesServiceMock>();
 
             var app = builder.Build();
