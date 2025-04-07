@@ -33,6 +33,7 @@ namespace ClothesClub.Services
         {
             item.LentOut = true;
             storedList.RemoveAll(c => c.ClothingId == item.ClothingId);
+            storedList.Add(item);
             storedList = localStore.SetItemAsync<List<ClothingItem>>("ClothingStorage", storedList);
         }
 
