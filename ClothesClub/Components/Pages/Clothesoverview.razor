@@ -1,6 +1,7 @@
 ﻿@page "/clothesoverview"
 @using ClothesClub.Interfaces
 @using core
+@using ClothesClub.Components.Cards
 @inject IClothesService ClothingService
 @rendermode InteractiveServer
 
@@ -9,14 +10,18 @@
 {
     <p>Waiting for component to load</p>
 }
-@foreach (var clothingItems in ItemsToDisplay)
-{
-    <ClothesClub.Components.Cards.ClothingItemCard @clothingItemToDisplay="@clothingItems"></ClothesClub.Components.Cards.ClothingItemCard>
-    <button class="btn-primary" @onclick=" () => LentClothingItem(clothingItems)"></button>
-}
+<div class="container-fluid">
+    
+    <button class="btn btn-primary" data-toggle="modal" data-target="@"></button>
+    @foreach (var clothingItems in ItemsToDisplay)
+    {
+        <ClothingItemCard @clothingItemToDisplay="@clothingItems"></ClothingItemCard>
+        <button class="btn-primary" @onclick=" () => LentClothingItem(clothingItems)"></button>
+    }
+</div>
+
 @code {
-    List<ClothingItem> ItemsToDisplay;
-    List<ClothingItem> LentedItems;
+    List<ClothingItem>? ItemsToDisplay;
 
     protected override void OnInitialized()
     {
@@ -24,15 +29,19 @@
         RefreshList();
     }
 
+    private void AddClothingItem()
+    {
+        
+    }
     private void LentClothingItem(ClothingItem itemToLent)
     {
-        ClothingService.LentOutClothingItem(itemToLent);
+        ClothingService.LentOutClothingItem(itemToLent, ItemsToDisplay);
         RefreshList();
     }
 
     private void RefreshList()
     {
-        ItemsToDisplay = ClothingService.GetAll();
+        ItemsToDisplay = ClothingService.GetAll(ItemsToDisplay);
     }
 
 
