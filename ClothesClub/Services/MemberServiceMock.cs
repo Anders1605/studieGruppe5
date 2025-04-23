@@ -6,7 +6,7 @@ namespace ClothesClub.Services
 {
     public class MemberServiceMock : IMemberService
     {
-        private List<MemberItem> Members = new();
+        public List<MemberItem> Members = new();
        
         public void CreateMember(MemberItem member)
         {
