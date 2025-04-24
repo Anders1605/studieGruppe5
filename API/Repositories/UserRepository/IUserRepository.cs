@@ -1,6 +1,11 @@
-﻿namespace API.Repositories.NewFolder
+﻿using Shared.Models;
+
+namespace API.Repositories.UserRepository
+
 {
     public interface IUserRepository
     {
+        Task <User> GetByEmailAddress(string emailAddress);
+
     }
 }
