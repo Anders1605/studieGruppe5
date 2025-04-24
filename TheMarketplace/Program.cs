@@ -1,4 +1,5 @@
 using TheMarketplace.Components;
+using TheMarketplace.Services.OfferService;
 
 namespace TheMarketplace
 {
@@ -11,6 +12,8 @@ namespace TheMarketplace
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            builder.Services.AddSingleton<IOfferService, OfferServiceMock>();
 
             var app = builder.Build();
 

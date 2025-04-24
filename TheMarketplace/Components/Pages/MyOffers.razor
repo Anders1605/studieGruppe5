@@ -1,7 +1,90 @@
 ﻿@page "/myoffers"
+@using Services.OfferService;
+@using Shared.Models;
+@using System.Diagnostics
+@inject IOfferService offerService;
+
 
 <h3>MyOffers</h3>
 
+@if (ListingOffers is not null)
+{
+    @foreach (var item in ListingOffers)
+    {
+        <p>List of all offers</p>
+        <ol>
+            @if (item.OfferEmbedded is not null && item.OfferEmbedded.OfferAccepted is false)
+            {
+                <li>
+                    <p>@item.Title</p>
+                    <p>@item.Price</p>
+                    <p>@item.OfferEmbedded.Buyer.Name</p>
+
+                    <button class="btn btn-primary" @onclick="() => AcceptOffer(item.OfferEmbedded)"> Accept Offer</button>
+                </li>
+            }
+        </ol>
+
+        <p>List of accepted offers</p>
+
+        if (item.OfferEmbedded is not null && item.OfferEmbedded.OfferAccepted is true)
+        {
+            <p>@item.Title</p>
+            <p>@item.Price</p>
+            <p>@item.OfferEmbedded.Buyer.Name</p>
+        }
+    }
+    <button @onclick="ButtonTestClick"> This is a test </button>
+
+}
+
 @code {
 
+    public List<Listing>? ListingOffers;
+
+    public User MockBuyer;
+
+    public User MockSeller;
+
+    protected override async void OnInitialized()
+    {
+        base.OnInitialized();
+
+        MockBuyer = new User()
+            {
+                Name = "Buyer",
+                Address = "testAddress",
+                EmailAddress = "TestBuyer@email.dk",
+                Password = "testPassword",
+                ProfilePictureUrl = "none",
+                TelephoneNumber = "1234567890"
+            };
+
+        MockSeller = new User()
+            {
+                Name = "Seller",
+                Address = "testAddress",
+                EmailAddress = "TestSeller@email.dk",
+                Password = "testPassword",
+                ProfilePictureUrl = "none",
+                TelephoneNumber = "0987654321"
+            };
+
+        ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
+
+        Console.WriteLine(ListingOffers.Count);
+    }
+
+    public void ButtonTestClick()
+    {
+        Debug.WriteLine("This is a test");
+    }
+
+    public async void AcceptOffer(Offer offerToAccept)
+    {
+        await offerService.AcceptOffer(offerToAccept);
+        ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
+        Debug.WriteLine(ListingOffers.Count);
+
+    }
 }
