@@ -1,6 +1,7 @@
 ﻿namespace TheMarketplace.Services.ListingsService
 {
-    public class ListingsServiceMock
+    public class ListingsServiceMock:IListingsService
     {
+        
     }
 }

@@ -1,5 +1,47 @@
-﻿<h3>CreateListingModal</h3>
+﻿@page "/Listing"
+@using Shared.Models;
+@using Services.ListingsService;
+@inject IListingsService listingservice
+
+
+<h3>Create Listing</h3>
+
+<EditForm Model="@aListing" OnSubmit="@HandleSubmit" class="row p-3">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label for="Title">Title</label>
+        <InputText id="Title" @bind-Value="aListing.Title" class="form-control"/>
+    </div>
+
+    <div>
+        <label for="Price">Price</label>
+        <InputNumber id="Price" @bind-Value="aListing.Price" class="form-control"/>
+    </div>
+
+    <div>
+        <label for="Description">Description</label>
+        <InputTextArea id="Description" @bind-Value="aListing.Description" class="form-control" />
+    </div>
+
+    <div class="col-12 mb-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</EditForm>
 
 @code {
+
+    private Listing aListing = new();
+
+    private List<Listing> nListings = new();
+
+    private void HandleSubmit()
+    {
+        Console.WriteLine("HandleSubmit called");
+        nListings.Add(aListing);
+        aListing = new ();
+    }
 
 }

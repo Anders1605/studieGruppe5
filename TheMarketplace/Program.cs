@@ -1,5 +1,6 @@
-using Blazored.LocalStorage;
+using MongoDB.Driver;
 using TheMarketplace.Components;
+using TheMarketplace.Services.ListingsService;
 
 namespace TheMarketplace
 {
@@ -12,9 +13,7 @@ namespace TheMarketplace
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
-
-            builder.Services.AddBlazoredLocalStorage();
-
+            builder.Services.AddSingleton<IListingsService, ListingsServiceMock>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -24,7 +23,6 @@ namespace TheMarketplace
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
