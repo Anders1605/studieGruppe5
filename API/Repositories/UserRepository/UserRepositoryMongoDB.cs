@@ -1,4 +1,4 @@
-﻿namespace API.Repositories.NewFolder
+﻿namespace API.Repositories.UserRepository
 {
     public class UserRepositoryMongoDB
     {

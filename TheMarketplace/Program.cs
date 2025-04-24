@@ -1,4 +1,6 @@
+using MongoDB.Driver;
 using TheMarketplace.Components;
+using TheMarketplace.Services.ListingsService;
 using TheMarketplace.Services.OfferService;
 
 namespace TheMarketplace
@@ -12,6 +14,7 @@ namespace TheMarketplace
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddSingleton<IListingsService, ListingsServiceMock>();
 
             builder.Services.AddSingleton<IOfferService, OfferServiceMock>();
 
