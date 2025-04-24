@@ -15,12 +15,12 @@ namespace TheMarketplace.Services.UserService
         new User {Name="Test3", TelephoneNumber="33333333", Address="Testevej 3", EmailAddress="test3@mail.com", Password="Test3", ProfilePictureUrl="test/billede3.jpg"}
         };
 
-        public void createUser (User newUser)
+        public void createUser(User newUser)
         {
             Console.WriteLine($"New user is as follows:Name: {newUser.Name} \n TelephoneNumber: {newUser.TelephoneNumber} \n Address: {newUser.Address} \n Emailaddress: {newUser.EmailAddress} \n Password: {newUser.Password} \n ProfilePictureUrl: {newUser.ProfilePictureUrl} \n ---");
             users.Add(newUser);
             Console.WriteLine("Updated list of users in localstorage is now: \n ---");
-            foreach(var user in users)
+            foreach (var user in users)
             {
                 Console.WriteLine($"Name: {user.Name} \n TelephoneNumber: {user.TelephoneNumber} \n Address: {user.Address} \n Emailaddress: {user.EmailAddress} \n Password: {user.Password} \n ProfilePictureUrl: {user.ProfilePictureUrl} \n ---");
             }
@@ -42,19 +42,20 @@ namespace TheMarketplace.Services.UserService
                 if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
                 {
                     return true;
-                } return false;
+                }
+            return false;
         }
 
         public async Task<bool> Login(string EmailAddress, string Password, bool status)
         {
-           bool validation = await Validate(EmailAddress, Password);
-           Console.WriteLine($"Validation was {validation} for user with {EmailAddress}");
-           if (validation == true)
+            bool validation = await Validate(EmailAddress, Password);
+            Console.WriteLine($"Validation was {validation} for user with {EmailAddress}");
+            if (validation == true)
             {
                 status = true;
                 Console.WriteLine($"User with {EmailAddress} is now loginStatus {status}");
             }
-           return status;
+            return status;
         }
 
     }
