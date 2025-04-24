@@ -1,0 +1,34 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">The Marketplace</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="flex-column">
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="marketplace">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> View Marketplace
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="mylistings">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Listings
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="myoffers">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Offers
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="myprofile">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> My Profile
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
