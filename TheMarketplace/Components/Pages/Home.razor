@@ -2,6 +2,34 @@
 
 <h3>Home</h3>
 
-@code {
-
+@if (loggedIn)
+{
+    <h1>Welcome, you are logged in!</h1>
 }
+else
+{
+    <h1>Please log in</h1>
+}
+
+<button class="btn btn-outline-primary" type="button" id="button-addon2" @onclick="onClick">
+    @buttonText
+</button>
+<p>@loggedIn</p>
+
+@code {
+    bool loggedIn = false;
+    string buttonText => loggedIn ? "Log out" : "Log in";
+
+    private void onClick()
+    {
+        // Toggle the loggedIn status
+        loggedIn = !loggedIn;
+
+        // Log to see if the state is toggling correctly
+        Console.WriteLine($"Logged In: {loggedIn}");
+
+        // Trigger UI re-render
+        StateHasChanged();
+    }
+}
+

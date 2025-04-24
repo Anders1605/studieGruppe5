@@ -5,7 +5,9 @@ namespace TheMarketplace.Services.UserService
 {
     public interface IUserService
     {
-        Task<User> LoginAsync(string EmailAddress, string Password);
+        Task<bool> Login(string EmailAddress, string Password, bool status);
+        void SetUserTest();
+        void createUser(User newUser);
 
     }
 }
