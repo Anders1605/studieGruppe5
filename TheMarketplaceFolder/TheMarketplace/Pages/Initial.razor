@@ -1,24 +1,51 @@
 ﻿@page "/"
+@using Services
+@using Shared.Models
+@inject Services.UserService.IUserService mUserService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+
 
 @if (loggedIn)
 {
-    <h1>Welcome, you are logged in!</h1>
+    <h2>Welcome to ‘The Marketplace’ at BAAA!</h2>
+    <p>Discover The Marketplace — Where smart savings meet sustainable living. Buy and sell second-hand goods to reduce waste, cut costs, and give quality items a second life.</p>
+    <button class="btn btn-outline-primary" type="button" id="button-addon2" @onclick="onClick">
+        @buttonText
+    </button>
+
 }
 else
 {
-    <h1>Please log in</h1>
+    <h2>Welcome to ‘The Marketplace’ at BAAA!</h2>
+
+    <p>Discover The Marketplace — where smart savings meet sustainable living. Buy and sell second-hand goods to reduce waste, cut costs, and give quality items a second life.
+        Once you’ve created a user, you will be able to view items for sale, list your own items and of course purchase items of your choosing. 
+        BAAA will make some storage available as needed, further details can be read in the ”Storage”-tab upon logging in.</p>
+
+    <button class="btn btn-outline-primary" type="button" id="button-addon2" @onclick="onClick">
+        @buttonText
+    </button>
+    <button class="btn btn-outline-primary" type="button" id="button-addon2">
+        Sign up
+    </button>
 }
 
-<button class="btn btn-outline-primary" type="button" id="button-addon2" @onclick="onClick">
-    @buttonText
-</button>
-<p>@loggedIn</p>
+
+<p>Status of logging in: @loggedIn</p>
 
 
 <!--<TheMarketplace.Components.Modals.LoginModal/>-->
 @code {
+    private List<User>? mockUsers;
     bool loggedIn = false;
     string buttonText => loggedIn ? "Log out" : "Log in";
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Fejl i denne med noget null
+        await mUserService.SetMockUsersAsync();
+        mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
+    }
 
     private void onClick()
     {
@@ -26,7 +53,7 @@ else
 
         Console.WriteLine($"Logged In: {loggedIn}");
 
-        StateHasChanged();
     }
+
 }
 
