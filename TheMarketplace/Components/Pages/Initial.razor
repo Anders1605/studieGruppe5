@@ -1,7 +1,5 @@
 ﻿@page "/"
 
-<h3>Home</h3>
-
 @if (loggedIn)
 {
     <h1>Welcome, you are logged in!</h1>
@@ -16,19 +14,20 @@ else
 </button>
 <p>@loggedIn</p>
 
+
+<!--<TheMarketplace.Components.Modals.LoginModal/>-->
+
+
 @code {
     bool loggedIn = false;
     string buttonText => loggedIn ? "Log out" : "Log in";
 
     private void onClick()
     {
-        // Toggle the loggedIn status
         loggedIn = !loggedIn;
 
-        // Log to see if the state is toggling correctly
         Console.WriteLine($"Logged In: {loggedIn}");
 
-        // Trigger UI re-render
         StateHasChanged();
     }
 }
