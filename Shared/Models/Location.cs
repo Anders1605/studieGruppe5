@@ -6,7 +6,20 @@ using System.Threading.Tasks;
 
 namespace Shared.Models
 {
-    internal class Location
+    public class Location
     {
+        public int LocationId { get; set; }
+
+        public string Name { get; set; }
+
+        public int StorageQuantity { get; set; }
+
+        public string BuildingLocation { get; set; }
+
+        public string RoomNumber { get; set; }
+
+        public string OpeningHours { get; set; }
     }
+
+
 }

@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Shared.Models
 {
-    internal class Offer
+    public class Offer
     {
+        public int OfferId { get; set; }
+
+        public User Buyer { get; set; }
+
+        public bool OfferAccepted { get; set; } = false;
     }
 }
