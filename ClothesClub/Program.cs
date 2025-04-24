@@ -17,6 +17,9 @@ namespace ClothesClub
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddSingleton<IMemberService, MemberServiceMock>();
+
+            builder.Services.AddSingleton< IClothesService,ClothesServiceMock>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

@@ -1,6 +1,7 @@
 using MongoDB.Driver;
 using TheMarketplace.Components;
 using TheMarketplace.Services.ListingsService;
+using TheMarketplace.Services.OfferService;
 
 namespace TheMarketplace
 {
@@ -14,6 +15,9 @@ namespace TheMarketplace
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddSingleton<IListingsService, ListingsServiceMock>();
+
+            builder.Services.AddSingleton<IOfferService, OfferServiceMock>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
