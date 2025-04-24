@@ -1,6 +1,8 @@
 ﻿using Shared.Models;
 using Blazored.LocalStorage;
 using System.Runtime.InteropServices;
+using MongoDB.Driver;
+using System.Reflection.Metadata;
 
 namespace TheMarketplace.Services.UserService
 {
@@ -24,20 +26,20 @@ namespace TheMarketplace.Services.UserService
             {
                 Console.WriteLine($"Name: {user.Name} \n TelephoneNumber: {user.TelephoneNumber} \n Address: {user.Address} \n Emailaddress: {user.EmailAddress} \n Password: {user.Password} \n ProfilePictureUrl: {user.ProfilePictureUrl} \n ---");
             }
-            SetUserTest();
+            SetMockUsersAsync();
             Console.WriteLine("Localstorage was updated");
         }
 
-        public void SetUserTest()
+        public async Task SetMockUsersAsync()
         {
-            LocalStorage.SetItemAsync<List<User>>("UsersInStorage", users);
+            await LocalStorage.SetItemAsync<List<User>>("UsersInStorage", users);
             Console.WriteLine("Users for test was created in localstorage");
         }
 
         //Async som forberedelse tíl mongoDB.
-        protected async Task<bool> Validate(string EmailAddress, string Password)
+        protected async Task<bool> Validate(string EmailAddress, string Password, List<User> list)
         {
-            foreach (User u in users)
+            foreach (User u in list)
 
                 if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
                 {
@@ -46,9 +48,9 @@ namespace TheMarketplace.Services.UserService
             return false;
         }
 
-        public async Task<bool> Login(string EmailAddress, string Password, bool status)
+        public async Task<bool> Login(string EmailAddress, string Password, bool status, List<User> list)
         {
-            bool validation = await Validate(EmailAddress, Password);
+            bool validation = await Validate(EmailAddress, Password, list);
             Console.WriteLine($"Validation was {validation} for user with {EmailAddress}");
             if (validation == true)
             {
