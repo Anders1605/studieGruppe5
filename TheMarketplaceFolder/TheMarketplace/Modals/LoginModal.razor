@@ -1,27 +1,102 @@
-﻿<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#LoginModal">
-    Login
-</button>
+﻿@using Services
+@using Shared.Models
+@using Modals
+@inject Services.UserService.IUserService mUserService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
+<!--Modal button-->
+@if (loggedIn != true)
+{
+    <button type="button" class="btn btn-success" @onclick="openModal">
+        Login
+    </button>
+} else
+{
+    <button type="button" class="btn btn-secondary" @onclick="onClickLogOut">
+        Logout
+    </button>
+}
 
+<!--Backdrop for modal-->
+@if (modalVisible)
+{
+    <div class="modal-backdrop fade show" @onclick="closeModal"></div>
+}
 
-<div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--Modal-->
+<div class="modal fade show" id="LoginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: @(modalVisible ? "block" : "none")">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" @onclick="closeModal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Test of login modal
+                <div class="row justify-content-center">
+                    <div class="col-md-6 mb-3">
+                        <label for="username">Email:</label>
+                        <InputText id="username" @bind-Value="loginEmail"
+                        placeholder="Indtast email..." class="form-control" />
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6 mb-3">
+                        <label for="password">Password:</label>
+                        <InputText id="password" @bind-Value="loginPW"
+                        placeholder="Indtast password..." class="form-control" />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" @onclick="closeModal">Close</button>
+                <button type="button" class="btn btn-success" @onclick="onClickLogin">Login</button>
             </div>
         </div>
     </div>
 </div>
 
 @code {
+    [Parameter] public EventCallback<bool> OnLoginStatusChanged { get; set; }
+    private List<User>? mockUsers;
+    private string loginEmail;
+    private string loginPW;
+    bool modalVisible = false;
+    bool loggedIn;
+    string buttonText => loggedIn ? "Log out" : "Login";
 
+    protected override async Task OnInitializedAsync()
+    {
+        if(mockUsers == null)
+            await mUserService.SetMockUsersAsync();
+        mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
+        loggedIn = mUserService.LoggedInMockStatus();
+    }
+
+    private void closeModal()
+    {
+        modalVisible = false;
+    }
+
+    private void openModal()
+    {
+        modalVisible = true;
+    }
+
+    private async void onClickLogin()
+    {
+        bool isLoggedIn = await mUserService.Login(loginEmail, loginPW, mockUsers);
+        loggedIn = isLoggedIn;
+        await OnLoginStatusChanged.InvokeAsync(isLoggedIn);
+        closeModal();
+        Console.WriteLine($"Logged In: {loggedIn}");
+    }
+
+    private async void onClickLogOut()
+    {
+        loggedIn = false;
+        bool isLoggedIn = mUserService.UpdateLoggedInMock(loggedIn);
+        await OnLoginStatusChanged.InvokeAsync(isLoggedIn);
+        closeModal();
+        Console.WriteLine($"Logout pressed, login status now {loggedIn}");
+    }
 }

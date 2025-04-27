@@ -8,6 +8,7 @@ namespace TheMarketplace.Services.UserService
 {
     public class UserServiceMock : IUserService
     {
+        private bool loggedInMock = false;
         private ILocalStorageService LocalStorage { get; set; }
 
         private List<User> users = new List<User>()
@@ -16,6 +17,11 @@ namespace TheMarketplace.Services.UserService
         new User {Name="Test2", TelephoneNumber="22222222", Address="Testevej 2", EmailAddress="test2@mail.com", Password="Test2", ProfilePictureUrl="test/billede2.jpg"},
         new User {Name="Test3", TelephoneNumber="33333333", Address="Testevej 3", EmailAddress="test3@mail.com", Password="Test3", ProfilePictureUrl="test/billede3.jpg"}
         };
+
+        public UserServiceMock(ILocalStorageService localStorage)
+        {
+            LocalStorage = localStorage;
+        }
 
         public void createUser(User newUser)
         {
@@ -30,6 +36,23 @@ namespace TheMarketplace.Services.UserService
             Console.WriteLine("Localstorage was updated");
         }
 
+        public bool UpdateLoggedInMock(bool validation)
+        {
+            if(validation) 
+            {
+                loggedInMock = true; 
+            } else
+            {
+                loggedInMock = false;
+            }
+                return loggedInMock;
+        }
+
+        public bool LoggedInMockStatus()
+        {
+            return loggedInMock;
+        }
+
         public async Task SetMockUsersAsync()
         {
             await LocalStorage.SetItemAsync<List<User>>("UsersInStorage", users);
@@ -40,25 +63,28 @@ namespace TheMarketplace.Services.UserService
         protected async Task<bool> Validate(string EmailAddress, string Password, List<User> list)
         {
             foreach (User u in list)
-
+            {
                 if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
                 {
-                    return true;
+                  return true;  // Successfully validated
                 }
-            return false;
+            }
+            return false;  // No match found
         }
 
-        public async Task<bool> Login(string EmailAddress, string Password, bool status, List<User> list)
+        public async Task<bool> Login(string EmailAddress, string Password, List<User> list)
         {
             bool validation = await Validate(EmailAddress, Password, list);
             Console.WriteLine($"Validation was {validation} for user with {EmailAddress}");
             if (validation == true)
             {
-                status = true;
-                Console.WriteLine($"User with {EmailAddress} is now loginStatus {status}");
+                UpdateLoggedInMock(validation);
+                Console.WriteLine($"User with {EmailAddress} is now loginStatus {loggedInMock}");
+            } else
+            {
+                UpdateLoggedInMock(validation);
             }
-            return status;
+                return loggedInMock;
         }
-
     }
 }

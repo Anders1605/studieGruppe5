@@ -1,35 +1,96 @@
 ﻿@using Services
+@using Shared.Models
+@using Modals
+@inject Services.UserService.IUserService mUserService
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
+<!--Modal button-->
+@if (loggedIn != true)
+{
+    <button type="button" class="btn btn-success" @onclick="openModal">
+        Sign Up
+    </button>
+}
 
+<!--Backdrop for modal-->
+@if (modalVisible)
+{
+    <div class="modal-backdrop fade show" @onclick="closeModal"></div>
+}
 
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#SignUpModal">
-    Sign Up
-</button>
-
-
-
-<div class="modal fade" id="SignUpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--Modal-->
+<div class="modal fade show" id="SignUpModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: @(modalVisible ? "block" : "none")">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">SIGN UP</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Login</h1>
+                <button type="button" class="btn-close" @onclick="closeModal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                Test of sign up modal
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="">Save changes</button>
-            </div>
+            <EditForm Model="@newUser" OnSubmit="@onSubmit" class="row p-3">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div>
+                    <label for="Name">Full Name</label>
+                    <InputText id="Name" @bind-Value="newUser.Name" class="form-control" />
+                </div>
+                <div>
+                    <label for="emailaddress">Emailaddress</label>
+                    <InputText id="emailaddress" @bind-Value="newUser.EmailAddress" class="form-control" />
+                </div>
+                <div>
+                    <label for="Telephonenumber">Telephonenumber</label>
+                    <InputText id="Telephonenumber" @bind-Value="newUser.TelephoneNumber" class="form-control" />
+                </div>
+                <div>
+                    <label for="Address">Address</label>
+                    <InputText id="Address" @bind-Value="newUser.Address" class="form-control" />
+                </div>
+                <div>
+                    <label for="profilePicture"> Upload ProfilePicture</label>
+                    <InputText id="profilePicture" @bind-Value="newUser.ProfilePictureUrl" class="form-control" />
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <InputText id="password" @bind-Value="newUser.Password" class="form-control" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" @onclick="closeModal">Close</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </EditForm>
         </div>
     </div>
 </div>
 
-
-
 @code {
-    //new IUserService;
+    private List<User>? mockUsers;
+    bool modalVisible = false;
+    bool loggedIn;
+    User newUser = new();
+    //Problem: Efter tilføjelse af ny bruger bliver brugeren umiddelbart ikke genkendt ved login. Ukendt fejl.
+    protected override async Task OnInitializedAsync()
+    {
+        if (mockUsers == null)
+            await mUserService.SetMockUsersAsync();
+        mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
+        loggedIn = mUserService.LoggedInMockStatus();
+    }
 
+    private async Task onSubmit()
+    {
+        mUserService.createUser(newUser);
+        newUser = new();
+        closeModal();
+    }
 
+    private void closeModal()
+    {
+        modalVisible = false;
+    }
+
+    private void openModal()
+    {
+        modalVisible = true;
+    }
 }
