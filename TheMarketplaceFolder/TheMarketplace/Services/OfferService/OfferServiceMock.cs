@@ -39,6 +39,12 @@ namespace TheMarketplace.Services.OfferService
                 Buyer = MockBuyer,
             };
 
+            Offer MockOffer2 = new Offer()
+            {
+                OfferId = 2,
+                Buyer = MockBuyer,
+            };
+
             MockListings = new List<Listing>()
             {
                 new Listing()
@@ -62,6 +68,18 @@ namespace TheMarketplace.Services.OfferService
                     Status ="Testing",
                     Title = "test2",
                     UserEmbedded = MockSeller,
+                    OfferEmbedded = MockOffer2
+                },
+
+                 new Listing()
+                {
+                    ListingId = 3,
+                    Category ="test",
+                    Description = "test",
+                    Price = 100,
+                    Status ="Testing",
+                    Title = "test3",
+                    UserEmbedded = MockSeller,
                 }
             };
 
@@ -70,7 +88,8 @@ namespace TheMarketplace.Services.OfferService
 
         public Task AcceptOffer(Offer offerToAccept)
         {
-            MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).Single().OfferEmbedded.OfferAccepted = true;
+            Console.WriteLine(offerToAccept.OfferId);
+            MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).First().OfferEmbedded.OfferAccepted = true;
             return Task.CompletedTask;
         }
 
@@ -79,11 +98,12 @@ namespace TheMarketplace.Services.OfferService
             return await Task.FromResult(MockListings.FindAll(x => x.UserEmbedded.EmailAddress == userToFindOffersFor.EmailAddress && x.OfferEmbedded is not null));
         }
 
+
         public Task SubmitOffer(Listing listingToSubmitOfferTo, User userSubmittingOffer)
         {
             MockListings.Find(x => x == listingToSubmitOfferTo).OfferEmbedded = new Offer()
             {
-                OfferId = 2,
+                OfferId = 3,
                 Buyer = userSubmittingOffer,
             };
             return Task.CompletedTask;
