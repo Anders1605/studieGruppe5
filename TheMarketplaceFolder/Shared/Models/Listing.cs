@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Shared.Models
 
 {
-    public class Listing
+    public class Listing:IMongoModel
     {
         public int ListingId { get; set; }
 

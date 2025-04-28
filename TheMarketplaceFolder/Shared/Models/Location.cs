@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shared.Models
 {
-    public class Location
+    public class Location: IMongoModel
     {
         public int LocationId { get; set; }
 
