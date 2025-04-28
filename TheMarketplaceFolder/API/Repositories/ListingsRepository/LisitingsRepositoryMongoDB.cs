@@ -36,6 +36,22 @@ namespace API.Repositories.ListingsRepository
             listingsCollection = client.GetDatabase(dbName)
                .GetCollection<Listing>(collectionName);
 
+
+            
         }
+        /*
+        public List<Listing> GetAll()
+        {
+            var noFilter = Builders<Listing>.Filter.Empty;
+            return listingsCollection.Find(noFilter).ToList();
+        }
+
+        public Listing Add(Listing newList)
+        {
+            listingsCollection.InsertOne(newList);
+            return newList;
+        }
+        */
+        
     }
 }
