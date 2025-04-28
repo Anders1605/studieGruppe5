@@ -8,7 +8,7 @@ using TheMarketplace.Services.UserService;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-builder.Services.AddScoped<IUserService, UserServiceMock>();
+builder.Services.AddScoped<IUserService, UserServiceMongoDB>();
 
 builder.Services.AddScoped<ILisitingService, ListingsServiceMock >();
 

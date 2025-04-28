@@ -1,3 +1,5 @@
+using API.Repositories.UserRepository;
+
 namespace API
 {
     public class Program
@@ -15,17 +17,20 @@ namespace API
                     policy =>
                     {
                         policy.AllowAnyOrigin();
+                        //Anders indsat to næste linjer
+                        policy.AllowAnyMethod();
+                        policy.AllowAnyHeader();
                     });
             });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //builder.Services.AddSingleton<ITodoRepository, TodoRepositoryInMemory>();
-            //builder.Services.AddSingleton<ITodoRepositoryInMemory, TodoRepositoryInMemory>();
-            //builder.Services.AddSingleton<ITodoRepositoryMongoDB, TodoRepositoryMongoDB>();
-
+            //Anders tilføjelse
+            builder.Services.AddSingleton<IUserRepository, UserRepositoryMongoDB>();
+            
             var app = builder.Build();
 
+            app.UseCors("policy");
             app.UseCors(x => x.AllowAnyMethod().AllowAnyHeader().SetIsOriginAllowed(origin => true).AllowCredentials());
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

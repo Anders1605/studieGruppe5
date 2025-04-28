@@ -79,7 +79,8 @@
 
     private async Task onSubmit()
     {
-        mUserService.createUser(newUser);
+        await mUserService.createUser(newUser);
+        Console.WriteLine("User was created in DB");
         newUser = new();
         closeModal();
     }
