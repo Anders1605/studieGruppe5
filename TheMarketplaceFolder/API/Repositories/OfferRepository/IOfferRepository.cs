@@ -1,6 +1,15 @@
-﻿namespace API.Repositories.OfferRepository
+﻿using Shared.Models;
+
+namespace API.Repositories.OfferRepository
 {
     public interface IOfferRepository
     {
+        public Task AcceptOfferAsync(Offer offer);
+
+        public Task SubmitOfferAsync(Listing listingToAddOfferTo,User user);
+
+        public Task<List<Listing>> GetOffersForListingAsync(Listing listing);
+
+        public Task<List<Listing>> GetListingsWithOffersForUserAsync(User user);
     }
 }
