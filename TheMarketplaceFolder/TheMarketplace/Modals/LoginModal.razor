@@ -67,11 +67,13 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //UserLoggedIn skal fikses. Både localstorage og kontrol ved initialize
         userLoggedInList = await LocalStorage.GetItemAsync<List<User>>("UserLoggedIn");
         if(mockUsers == null)
         {
             await mUserService.SetMockUsersAsync();
         }
+        //Console.WriteLine($"Users in 'UserLoggedIn' {userLoggedInList.Count()}");
         if(userLoggedInList != null)
         {
             await LocalStorage.RemoveItemAsync("UserLoggedIn");
