@@ -5,17 +5,17 @@ namespace API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            
             // Add services to the container.
 
             builder.Services.AddControllers();
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("policy",
-                                  policy =>
-                                  {
-                                      policy.AllowAnyOrigin();
-                                  });
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin();
+                    });
             });
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
