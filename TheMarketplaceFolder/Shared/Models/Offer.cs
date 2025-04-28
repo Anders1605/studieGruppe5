@@ -7,7 +7,7 @@ using MongoDB.Driver;
 
 namespace Shared.Models
 {
-    public class Offer:IMongoModel
+    public class Offer
     {
         public int OfferId { get; set; }
 

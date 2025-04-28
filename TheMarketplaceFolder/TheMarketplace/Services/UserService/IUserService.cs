@@ -6,6 +6,7 @@ namespace TheMarketplace.Services.UserService
     public interface IUserService
     {
         Task<bool> Login(string EmailAddress, string Password, List<User> list);
+        Task<bool> LoginMongoDB(string EmailAddress, string Password);
         Task SetMockUsersAsync();
         void createUser(User newUser);
         bool UpdateLoggedInMock(bool validation);
