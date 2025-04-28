@@ -38,7 +38,7 @@ namespace API.Repositories.OfferRepository
             _offersCollection = _client.GetDatabase(dbName)
                .GetCollection<Offer>(collectionName);
 
-            _listingsCollection = _client.GetDatabase(dbName).GetCollection<Listing>("Listings")
+            //_listingsCollection = _client.GetDatabase(dbName).GetCollection<Listing>("Listings")
 
         }
 

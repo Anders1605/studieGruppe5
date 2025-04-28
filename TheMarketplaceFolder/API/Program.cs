@@ -1,3 +1,5 @@
+using API.Repositories.OfferRepository;
+
 namespace API
 {
     public class Program
@@ -23,6 +25,8 @@ namespace API
             //builder.Services.AddSingleton<ITodoRepository, TodoRepositoryInMemory>();
             //builder.Services.AddSingleton<ITodoRepositoryInMemory, TodoRepositoryInMemory>();
             //builder.Services.AddSingleton<ITodoRepositoryMongoDB, TodoRepositoryMongoDB>();
+            
+            builder.Services.AddScoped<IOfferRepository, OfferRepositoryMongoDB>();
 
             var app = builder.Build();
 
