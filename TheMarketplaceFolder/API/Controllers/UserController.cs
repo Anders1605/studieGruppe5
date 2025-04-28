@@ -18,28 +18,29 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<User> Get()
+        public List<User> Get()
         {
             return userrepoMongoDB.GetAll();
         }
 
         [HttpGet]
-        [Route("{email:string}, {password:string}")]
+        [Route("{email}/{password}")]
         public async Task<User> Login(string email, string password)
         {
             User loginUser = new();
             List<User> userList = userrepoMongoDB.GetAll();
-            loginUser = await Validate(e, p, userList);
+            loginUser = await Validate(email, password, userList);
             return loginUser;
         }
 
         [HttpPost]
-        [Route("{user:User}")]
-        public bool addUser(User user)
+        public ActionResult<bool> AddUser([FromBody] User user)
         {
-            return userrepoMongoDB.AddUser(user);
+            bool result = userrepoMongoDB.AddUser(user);
+            return Ok(result);
         }
 
+        //-----------------------------------------------
         protected async Task<User> Validate(string EmailAddress, string Password, List<User> list)
         {
             foreach (User u in list)

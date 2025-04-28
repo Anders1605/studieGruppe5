@@ -1,12 +1,20 @@
 ﻿using Shared.Models;
+using System.Net.Http.Json;
 
 namespace TheMarketplace.Services.UserService
 {
     public class UserServiceMongoDB : IUserService
     {
-        public void createUser(User newUser)
+        private string serverUrl = "https://localhost:7107";
+        private HttpClient _client;
+        public UserServiceMongoDB(HttpClient client)
         {
-            throw new NotImplementedException();
+            _client = client;
+        }
+
+        public async Task createUser(User newUser)
+        {
+            await _client.PostAsJsonAsync<User>($"{serverUrl}/api/user", newUser);
         }
 
         public bool LoggedInMockStatus()
@@ -14,10 +22,12 @@ namespace TheMarketplace.Services.UserService
             throw new NotImplementedException();
         }
 
-        public Task<bool> LoginMongoDB(string EmailAddress, string Password)
+        public async Task<User> LoginMongoDB(string EmailAddress, string Password)
         {
-            throw new NotImplementedException();
-            //Noget med https getAsyn eller lignende hvor email og pw sendes til controller 
+            User userOnline = new();
+            //Noget med https getAsync eller lignende hvor email og pw sendes til controller 
+            userOnline = await _client.GetFromJsonAsync<User>($"{serverUrl}/api/{EmailAddress}/{Password}"); 
+            return userOnline;
         }
 
         public Task SetMockUsersAsync()

@@ -5,7 +5,7 @@ using Shared.Models;
 
 namespace API.Repositories.UserRepository
 {
-    public class UserRepositoryMongoDB
+    public class UserRepositoryMongoDB:IUserRepository
     {
         private IMongoCollection<User> userCollection;
 
@@ -65,7 +65,7 @@ namespace API.Repositories.UserRepository
             return validation;
         }
 
-        public Task<bool> Login(string EmailAddress, string Password, List<User> list)
+        //public Task<bool> Login(string EmailAddress, string Password, List<User> list);
 
 
     }
