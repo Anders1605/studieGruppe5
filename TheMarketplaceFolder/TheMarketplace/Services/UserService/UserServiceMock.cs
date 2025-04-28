@@ -60,16 +60,17 @@ namespace TheMarketplace.Services.UserService
         }
 
         //Async som forberedelse tíl mongoDB.
+        //Fix case-sensitivity
         protected async Task<bool> Validate(string EmailAddress, string Password, List<User> list)
         {
             foreach (User u in list)
             {
                 if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
                 {
-                  return true;  // Successfully validated
+                  return true; 
                 }
             }
-            return false;  // No match found
+            return false; 
         }
 
         public async Task<bool> Login(string EmailAddress, string Password, List<User> list)
