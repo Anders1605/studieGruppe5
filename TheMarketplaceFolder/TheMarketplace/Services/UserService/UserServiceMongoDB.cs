@@ -1,4 +1,5 @@
-﻿using Shared.Models;
+﻿using Blazored.LocalStorage;
+using Shared.Models;
 using System.Net.Http.Json;
 
 namespace TheMarketplace.Services.UserService
@@ -6,12 +7,15 @@ namespace TheMarketplace.Services.UserService
     public class UserServiceMongoDB : IUserService
     {
         private string serverUrl = "https://localhost:7107";
+
         private HttpClient _client;
-        public UserServiceMongoDB(HttpClient client)
+        private ILocalStorageService LocalStorage { get; set; }
+
+        public UserServiceMongoDB(ILocalStorageService localStorage,HttpClient client)
         {
+            LocalStorage = localStorage;
             _client = client;
         }
-
         public async Task createUser(User newUser)
         {
             await _client.PostAsJsonAsync<User>($"{serverUrl}/api/user", newUser);
@@ -26,9 +30,19 @@ namespace TheMarketplace.Services.UserService
         {
             User userOnline = new();
             //Noget med https getAsync eller lignende hvor email og pw sendes til controller 
-            userOnline = await _client.GetFromJsonAsync<User>($"{serverUrl}/api/{EmailAddress}/{Password}"); 
+            userOnline = await _client.GetFromJsonAsync<User>($"{serverUrl}/api/user/{EmailAddress}/{Password}/"); 
             return userOnline;
         }
+
+        public async Task<bool> CheckLogin()
+        {
+            User loggedInUser = new();
+            loggedInUser = await LocalStorage.GetItemAsync<User>("User Signed In");
+            if (loggedInUser == null)
+                return false;
+            else return true;
+        }
+
 
         public Task SetMockUsersAsync()
         {

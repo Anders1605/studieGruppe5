@@ -11,5 +11,6 @@ namespace TheMarketplace.Services.UserService
         Task createUser(User newUser);
         bool UpdateLoggedInMock(bool validation);
         bool LoggedInMockStatus();
+        Task<bool> CheckLogin();
     }
 }

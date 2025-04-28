@@ -24,7 +24,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("{email}/{password}")]
+        [Route("{email}/{password}/")]
         public async Task<User> Login(string email, string password)
         {
             User loginUser = new();

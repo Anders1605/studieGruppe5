@@ -71,10 +71,7 @@
     //Problem: Efter tilføjelse af ny bruger bliver brugeren umiddelbart ikke genkendt ved login. Ukendt fejl.
     protected override async Task OnInitializedAsync()
     {
-        if (mockUsers == null)
-            await mUserService.SetMockUsersAsync();
-        mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
-        loggedIn = mUserService.LoggedInMockStatus();
+
     }
 
     private async Task onSubmit()

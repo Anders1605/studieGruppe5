@@ -5,7 +5,7 @@
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
 <!--Modal button-->
-@if (loggedIn != true)
+@if (!loggedIn)
 {
     <button type="button" class="btn btn-success" @onclick="openModal">
         Login
@@ -56,31 +56,23 @@
 </div>
 
 @code {
-    [Parameter] public EventCallback<bool> OnLoginStatusChanged { get; set; }
     private List<User>? mockUsers;
-    private List<User>? userLoggedInList;
-    private string loginEmail;
-    private string loginPW;
+    private User? userLoggedIn;
+    public string loginEmail;
+    public string loginPW;
+    public bool loginError;
     bool modalVisible = false;
     bool loggedIn;
     string buttonText => loggedIn ? "Log out" : "Login";
 
     protected override async Task OnInitializedAsync()
     {
-        //UserLoggedIn skal fikses. Både localstorage og kontrol ved initialize
-        userLoggedInList = await LocalStorage.GetItemAsync<List<User>>("UserLoggedIn");
-        if(mockUsers == null)
+        userLoggedIn = await LocalStorage.GetItemAsync<User>("User Signed In");
+        if (userLoggedIn != null)
         {
-            await mUserService.SetMockUsersAsync();
+            Console.WriteLine($"A User is signed in. Name is {userLoggedIn.Name}");
+            loggedIn = true;
         }
-        //Console.WriteLine($"Users in 'UserLoggedIn' {userLoggedInList.Count()}");
-        if(userLoggedInList != null)
-        {
-            await LocalStorage.RemoveItemAsync("UserLoggedIn");
-        }
-        mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
-        
-        loggedIn = mUserService.LoggedInMockStatus();
     }
 
     private void closeModal()
@@ -95,20 +87,27 @@
 
     private async void onClickLogin()
     {
-        bool isLoggedIn = await mUserService.Login(loginEmail, loginPW, mockUsers);
-        loggedIn = isLoggedIn;
-        await OnLoginStatusChanged.InvokeAsync(isLoggedIn);
-        closeModal();
-        Console.WriteLine($"Logged In: {loggedIn}");
+        userLoggedIn = await mUserService.LoginMongoDB(loginEmail, loginPW);
+        await LocalStorage.SetItemAsync<User>("User Signed In", userLoggedIn);
+        if (userLoggedIn != null)
+        {
+            Console.WriteLine($"Logged In");
+            loggedIn = true;
+            closeModal();
+        } else
+        {
+            loggedIn = false;
+            loginError = true;
+            Console.WriteLine("Login error");
+        }
+        StateHasChanged();
     }
 
     private async void onClickLogOut()
     {
-        loggedIn = false;
-        bool isLoggedIn = mUserService.UpdateLoggedInMock(loggedIn);
-        await OnLoginStatusChanged.InvokeAsync(isLoggedIn);
-        await LocalStorage.RemoveItemAsync("UserLoggedIn");
+        await LocalStorage.RemoveItemAsync("User Signed In");
+        Console.WriteLine($"Logout called");
         closeModal();
-        Console.WriteLine($"Logout pressed, login status now {loggedIn}");
+        StateHasChanged();
     }
 }
