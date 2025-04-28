@@ -1,6 +1,6 @@
 ﻿namespace Shared.Models
 {
-    public class User
+    public class User: IMongoModel
     {
         public string Name { get; set; }
 
