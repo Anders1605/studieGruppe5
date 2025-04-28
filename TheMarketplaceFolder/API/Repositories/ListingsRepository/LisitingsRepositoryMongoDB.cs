@@ -39,19 +39,17 @@ namespace API.Repositories.ListingsRepository
 
             
         }
-        /*
+        
         public List<Listing> GetAll()
         {
             var noFilter = Builders<Listing>.Filter.Empty;
             return listingsCollection.Find(noFilter).ToList();
         }
 
-        public Listing Add(Listing newList)
+        public void Add(Listing newList)
         {
-            listingsCollection.InsertOne(newList);
-            return newList;
+            listingsCollection.InsertOne(newList); 
         }
-        */
         
     }
 }
