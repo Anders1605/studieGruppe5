@@ -38,10 +38,16 @@ namespace API.Repositories.OfferRepository
             _offersCollection = _client.GetDatabase(dbName)
                .GetCollection<Offer>(collectionName);
 
-            //_listingsCollection = _client.GetDatabase(dbName).GetCollection<Listing>("Listings")
+            _listingsCollection = _client.GetDatabase(dbName).GetCollection<Listing>("Listings");
 
         }
 
+        
+        /// <summary>
+        /// Accepts an offer, requested by a user (seller)
+        /// </summary>
+        /// <param name="offer"></param>
+        /// <returns></returns>
         public async Task AcceptOfferAsync(Offer offer)
         {
             var filterListing = Builders<Listing>.Filter.Eq(x => x.OfferEmbedded.OfferId, offer.OfferId);
@@ -57,20 +63,36 @@ namespace API.Repositories.OfferRepository
             await _offersCollection.UpdateOneAsync(filterOffer, updateOffer);
         }
 
-        public async Task<List<Listing>> GetOffersForListingAsync(Listing listing)
+        /// <summary>
+        /// Gets all the offers, for a requested listing.
+        /// </summary>
+        /// <param name="listingId"></param>
+        /// <returns></returns>
+        public async Task<List<Listing>> GetOffersForListingAsync(string listingId)
         {
-            var filter = Builders<Listing>.Filter.Eq(x => x.ListingId, listing.ListingId);
+            var filter = Builders<Listing>.Filter.Eq("ListingId", listingId);
 
             return await _listingsCollection.FindAsync(filter).Result.ToListAsync();
         }
 
-        public async Task<List<Listing>> GetListingsWithOffersForUserAsync(User user)
+        /// <summary>
+        /// Fetches all the listings, which has offers for the requested user.
+        /// </summary>
+        /// <param name="userEmailAddress"></param>
+        /// <returns></returns>
+        public async Task<List<Listing>> GetListingsWithOffersForUserAsync(string userEmailAddress)
         {
             return _listingsCollection.AsQueryable()
-                .Where(x => x.UserEmbedded.EmailAddress == user.EmailAddress && (x.OfferEmbedded != null && x.OfferEmbedded.OfferAccepted!))
+                .Where(x => x.UserEmbedded.EmailAddress == userEmailAddress && (x.OfferEmbedded != null && x.OfferEmbedded.OfferAccepted!))
                 .ToList();
         }
 
+        /// <summary>
+        /// Submits an offer for a listed item, from a user (buyer) who requested to send the offer
+        /// </summary>
+        /// <param name="listingToSubmitOfferTo"></param>
+        /// <param name="userSubmittingOffer"></param>
+        /// <returns></returns>
         public async Task SubmitOfferAsync(Listing listingToSubmitOfferTo, User userSubmittingOffer)
         {
             //Insert The Offer

@@ -6,10 +6,10 @@ namespace API.Repositories.OfferRepository
     {
         public Task AcceptOfferAsync(Offer offer);
 
-        public Task SubmitOfferAsync(Listing listingToAddOfferTo,User user);
+        public Task SubmitOfferAsync(Listing listingToAddOfferTo, User user);
 
-        public Task<List<Listing>> GetOffersForListingAsync(Listing listing);
+        public Task<List<Listing>> GetOffersForListingAsync(string listingId);
 
-        public Task<List<Listing>> GetListingsWithOffersForUserAsync(User user);
+        public Task<List<Listing>> GetListingsWithOffersForUserAsync(string userEmailAddress);
     }
 }

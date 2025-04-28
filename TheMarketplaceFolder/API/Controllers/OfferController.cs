@@ -17,24 +17,24 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("/GetOffersForUser")]
-        public async Task<List<Listing>> GetOffersForUserAsync([FromBody] User user)
+        [Route("/GetOffersForUser/{userEmailAddress}")]
+        public async Task<List<Listing>> GetOffersForUserAsync([FromRoute] string userEmailAddress)
         {
-            return await _offerRepository.GetListingsWithOffersForUserAsync(user);
+            return await _offerRepository.GetListingsWithOffersForUserAsync(userEmailAddress);
         }
 
         [HttpGet]
-        [Route("/GetOfferForListing")]
-        public async Task<List<Listing>> GetOffersForListingAsync(Listing listing)
+        [Route("/GetOfferForListing{listingId}")]
+        public async Task<List<Listing>> GetOffersForListingAsync([FromRoute] string listingId)
         {
-            return await _offerRepository.GetOffersForListingAsync(listing);
+            return await _offerRepository.GetOffersForListingAsync(listingId);
         }
 
         [HttpPut]
         [Route("/SubmitOffer")]
-        public async Task SubmitOffer(Listing listing, User user)
+        public async Task SubmitOffer([FromBody] Tuple<Listing, User> tuple)
         {
-            await _offerRepository.SubmitOfferAsync(listing, user);
+            await _offerRepository.SubmitOfferAsync(tuple.Item1, tuple.Item2);
         }
 
         [HttpPost]

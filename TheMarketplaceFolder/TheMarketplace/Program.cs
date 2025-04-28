@@ -13,7 +13,7 @@ builder.Services.AddScoped<IUserService, UserServiceMongoDB>();
 
 builder.Services.AddScoped<ILisitingService, ListingsServiceMock >();
 
-builder.Services.AddSingleton<IOfferService, OfferServiceMock>();
+builder.Services.AddScoped<IOfferService, OfferServiceMongoDB>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
