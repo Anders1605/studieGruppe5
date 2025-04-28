@@ -23,6 +23,34 @@ namespace API.Controllers
             return userrepoMongoDB.GetAll();
         }
 
+        [HttpGet]
+        [Route("{email:string}, {password:string}")]
+        public async Task<User> Login(string email, string password)
+        {
+            User loginUser = new();
+            List<User> userList = userrepoMongoDB.GetAll();
+            loginUser = await Validate(e, p, userList);
+            return loginUser;
+        }
+
+        [HttpPost]
+        [Route("{user:User}")]
+        public bool addUser(User user)
+        {
+            return userrepoMongoDB.AddUser(user);
+        }
+
+        protected async Task<User> Validate(string EmailAddress, string Password, List<User> list)
+        {
+            foreach (User u in list)
+            {
+                if (EmailAddress.ToLower().Equals(u.EmailAddress.ToLower()) && Password.Equals(u.Password))
+                {
+                    return u;
+                }
+            }
+            return null;
+        }
 
     }
 }

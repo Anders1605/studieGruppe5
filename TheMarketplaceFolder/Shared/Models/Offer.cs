@@ -7,11 +7,13 @@ using MongoDB.Driver;
 
 namespace Shared.Models
 {
-    public class Offer:IMongoModel
+    public class Offer
     {
         public int OfferId { get; set; }
 
         public User Buyer { get; set; }
+        
+        //public int Amount { get; set; }
 
         public bool OfferAccepted { get; set; } = false;
     }

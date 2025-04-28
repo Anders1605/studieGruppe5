@@ -65,6 +65,8 @@ namespace API.Repositories.UserRepository
             return validation;
         }
 
+        public Task<bool> Login(string EmailAddress, string Password, List<User> list)
+
 
     }
 }

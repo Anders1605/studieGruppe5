@@ -7,18 +7,18 @@ using System.ComponentModel.DataAnnotations;
 namespace Shared.Models
 
 {
-    public class Listing:IMongoModel
+    public class Listing
     {
         public int ListingId { get; set; }
 
-        //Lånt fra Oles github
+        /*Lånt fra Oles github*/
         [Required]
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Title must be between 2 and 50 characters.")]
         public string Title { get; set; }
 
-        //Lånt fra Oles github
+        /*Lånt fra Oles github*/
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "Price must be positive")]
+        [Range(1,int.MaxValue, ErrorMessage = "Price must be positive")]
         public double Price { get; set; }
 
         public string Description { get; set; }

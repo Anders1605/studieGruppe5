@@ -1,39 +1,103 @@
-﻿@page "/Listing"
+﻿@page "/createListing"
 @using Shared.Models;
-@using Services.ListingsService;
+@using TheMarketplace.Services.ListingsService;
 @inject ILisitingService listingservice
+@inject NavigationManager navMan
 
+<PageTitle>Create listing</PageTitle>
 
 <h3>Create Listing</h3>
 
-<EditForm Model="@aListing" OnSubmit="@HandleSubmit" class="row p-3">
+<EditForm EditContext="@aEditContext" class="row p-3" OnValidSubmit="@HandleSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div>
+    <div class="col-md-12 mb-3">
         <label for="Title">Title</label>
-        <InputText id="Title" @bind-Value="aListing.Title" class="form-control" />
+        <InputText id="Title" @bind-Value="listing.Title" class="form-control"/>
     </div>
 
-    <div>
+    <div class="col-md-12 mb-3">
         <label for="Price">Price</label>
-        <InputNumber id="Price" @bind-Value="aListing.Price" class="form-control" />
+        <InputNumber id="Price" @bind-Value="listing.Price" class="form-control"/>
     </div>
 
-    <div>
+    <div class="col-md-12 mb-3">
         <label for="Description">Description</label>
-        <InputTextArea id="Description" @bind-Value="aListing.Description" class="form-control" />
+        <InputTextArea id="Description" @bind-Value="listing.Description" class="form-control" />
     </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="Category">Category</label>
+        <InputText id="Category" @bind-Value="listing.Category" class="form-control" />
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="Status">Status</label>
+        <InputText id="Status" @bind-Value="listing.Status" class="form-control" />
+    </div>
+
+    <!-- Hjælp fra chatten -->
+    <!--<div class="col-md-6 mb-3">
+        <label for="OfferAmount">Offer Amount</label>
+        <InputNumber id="OfferAmount" @bind-Value="listing.OfferEmbedded.Amount" class="form-control" />
+    </div> -->
+
+   <!-- <div class="col-md-6 mb-3">
+        <label for="LocationRoom">Location Room</label>
+        <InputText id="LocationRoom" @bind-Value="listing.LocationEmbedded.RoomNumber" class="form-control" />
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label for="UserName">Username</label>
+        <InputText id="UserName" @bind-Value="listing.UserEmbedded.Name" class="form-control" />
+    </div> -->
 
     <div class="col-12 mb-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Add listing</button>
     </div>
 
 </EditForm>
 
+<!--Alle produkter vises i en liste nedenfor.
+Fundet i Oles kode, muligvis ikke nødvendig
+
+<h2>List of Products</h2>
+<ul>
+    @foreach (Listing l in nListings)
+    {
+        <li>@l.Title, @l.Price kr</li>
+    }
+</ul>
+-->
+
+
 @code {
 
-    private Listing aListing = new();
+    Listing listing = new();
+
+    private EditContext aEditContext;
+
+    protected override void OnInitialized()
+    {
+        aEditContext = new EditContext(listing);
+    }
+
+    public async Task HandleSubmit()
+    {
+        listingservice.Add(listing);
+
+        listing = new(); //clears feilds in form
+
+        navMan.NavigateTo("myListings");
+    }
+
+    /*private Listing aListing = new()
+    {
+        OfferEmbedded = new Offer(),
+        LocationEmbedded = new Location(),
+        UserEmbedded = new User()
+    };
 
     private List<Listing> nListings = new();
 
@@ -41,7 +105,11 @@
     {
         Console.WriteLine("HandleSubmit called");
         nListings.Add(aListing);
-        aListing = new();
-    }
+        aListing = new (){
+            OfferEmbedded = new Offer(),
+            LocationEmbedded = new Location(),
+            UserEmbedded = new User()
+        };
+    }*/
 
 }

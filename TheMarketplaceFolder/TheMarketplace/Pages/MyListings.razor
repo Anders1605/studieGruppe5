@@ -1,7 +1,67 @@
 ﻿@page "/mylistings"
+@using Shared.Models
+@using TheMarketplace.Services
+@using TheMarketplace.Services.ListingsService
+@inject ILisitingService ListingService
+@inject NavigationManager navMan
 
-<h3>MyListings</h3>
+<h3>My Listings</h3>
 
-@code {
+@if (listings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <button class="btn-primary" @onclick="NavigateToAdd">Add listing</button>
+    <table class="table">
+
+        <tbody>
+        @foreach (var listing in listings)
+        {
+            <tr>
+                <td><h2>@listing.Title</h2><br />
+                    Price: @listing.Price<br />
+                    Category: @listing.Category<br />
+                    Status: @listing.Status<br />
+                    Description: @listing.Description<br />
+                    <!--
+                    Location: @listing.LocationEmbedded<br />
+                    -->
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <button class="btn-primary" @onclick="NavigateToAdd">Add Listing</button>
 
 }
+    
+
+    @code {
+        
+        private Listing[]? listings;
+        
+        protected override async Task OnInitializedAsync()
+        {
+            await LoadAll();
+        }
+
+        private async Task LoadAll()
+        {
+            listings = await ListingService.GetAll();
+        }
+        
+        private void NavigateToAdd()
+        {
+            navMan.NavigateTo("createListing");
+        }
+
+    /*private async Task DeleteListing(Listing listing)
+    {
+        await ListingService.DeleteById(listing.ListingId);
+        await LoadAll();
+    }*/
+
+    }
