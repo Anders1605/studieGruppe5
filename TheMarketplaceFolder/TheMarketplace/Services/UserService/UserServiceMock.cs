@@ -11,6 +11,8 @@ namespace TheMarketplace.Services.UserService
         private bool loggedInMock = false;
         private ILocalStorageService LocalStorage { get; set; }
 
+        private List<User> usersLoggedIn = new List<User>();
+
         private List<User> users = new List<User>()
         {
         new User {Name="Test1", TelephoneNumber="11111111", Address="Testevej 1", EmailAddress="test1@mail.com", Password="Test1", ProfilePictureUrl="test/billede1.jpg"},
@@ -60,17 +62,16 @@ namespace TheMarketplace.Services.UserService
         }
 
         //Async som forberedelse tíl mongoDB.
-        //Fix case-sensitivity
         protected async Task<bool> Validate(string EmailAddress, string Password, List<User> list)
         {
             foreach (User u in list)
             {
-                if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
+                if (EmailAddress.ToLower().Equals(u.EmailAddress.ToLower()) && Password.Equals(u.Password))
                 {
-                  return true; 
+                  return true;
                 }
             }
-            return false; 
+            return false;
         }
 
         public async Task<bool> Login(string EmailAddress, string Password, List<User> list)
@@ -81,6 +82,15 @@ namespace TheMarketplace.Services.UserService
             {
                 UpdateLoggedInMock(validation);
                 Console.WriteLine($"User with {EmailAddress} is now loginStatus {loggedInMock}");
+                foreach (User u in list)
+                {
+                    if (EmailAddress.Equals(u.EmailAddress) && Password.Equals(u.Password))
+                    {
+                        usersLoggedIn.Add(u);
+                        await LocalStorage.SetItemAsync<List<User>>("UserLoggedIn", usersLoggedIn);
+                        usersLoggedIn.Clear();
+                    }
+                }
             } else
             {
                 UpdateLoggedInMock(validation);

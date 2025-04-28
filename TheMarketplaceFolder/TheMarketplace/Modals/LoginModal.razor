@@ -58,6 +58,7 @@
 @code {
     [Parameter] public EventCallback<bool> OnLoginStatusChanged { get; set; }
     private List<User>? mockUsers;
+    private List<User>? userLoggedInList;
     private string loginEmail;
     private string loginPW;
     bool modalVisible = false;
@@ -66,9 +67,19 @@
 
     protected override async Task OnInitializedAsync()
     {
+        //UserLoggedIn skal fikses. Både localstorage og kontrol ved initialize
+        userLoggedInList = await LocalStorage.GetItemAsync<List<User>>("UserLoggedIn");
         if(mockUsers == null)
+        {
             await mUserService.SetMockUsersAsync();
+        }
+        //Console.WriteLine($"Users in 'UserLoggedIn' {userLoggedInList.Count()}");
+        if(userLoggedInList != null)
+        {
+            await LocalStorage.RemoveItemAsync("UserLoggedIn");
+        }
         mockUsers = await LocalStorage.GetItemAsync<List<User>>("UsersInStorage");
+        
         loggedIn = mUserService.LoggedInMockStatus();
     }
 
@@ -96,6 +107,7 @@
         loggedIn = false;
         bool isLoggedIn = mUserService.UpdateLoggedInMock(loggedIn);
         await OnLoginStatusChanged.InvokeAsync(isLoggedIn);
+        await LocalStorage.RemoveItemAsync("UserLoggedIn");
         closeModal();
         Console.WriteLine($"Logout pressed, login status now {loggedIn}");
     }
