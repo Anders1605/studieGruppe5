@@ -17,14 +17,17 @@ namespace API.Controllers
             this.userrepoMongoDB = userrepoMongoDB;
         }
 
+        //Returnerer en liste med alle brugerne fra User-collection. 
         [HttpGet]
         public List<User> Get()
         {
             return userrepoMongoDB.GetAll();
         }
 
+        /*Opretter en user og en list af users. Listen sættes lig med alle brugerne i User-collection. Validate bruger listen samt email og pw fra routen som parametre.
+        Returnerer kun en user i loginUser hvis validate finder en bruger med samme email og pw.*/
         [HttpGet]
-        [Route("{email}/{password}")]
+        [Route("{email}/{password}/")]
         public async Task<User> Login(string email, string password)
         {
             User loginUser = new();
@@ -33,6 +36,7 @@ namespace API.Controllers
             return loginUser;
         }
 
+        //Tager brugeren fra routen og sætter den lig med result og forsøger derefter at indsætte i User-collection med AddUser. Returnerer true eller false efter resultatet.
         [HttpPost]
         public ActionResult<bool> AddUser([FromBody] User user)
         {

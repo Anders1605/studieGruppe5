@@ -103,5 +103,10 @@ namespace TheMarketplace.Services.UserService
         {
             throw new NotImplementedException();
         }
+
+        Task<bool> IUserService.CheckLogin()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
