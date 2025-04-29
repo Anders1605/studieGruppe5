@@ -31,7 +31,7 @@ namespace API.Repositories.UserRepository
                 throw;
             }
             
-            // Set the name of the collection you want to use.
+            // Anvendt DB og collection
             var dbName = "Miniproject";
             var collectionName = "Users";
 
@@ -40,6 +40,7 @@ namespace API.Repositories.UserRepository
         
         }
 
+        //Bruger et tomt filter, søger efter brugerne i userCollection og returnerer en liste.
         public List<User> GetAll()
         {
             var noFilter = Builders<User>.Filter.Empty;
@@ -47,6 +48,9 @@ namespace API.Repositories.UserRepository
         }
 
 
+        //Opretter en liste med alle brugere, sætter validation til true og sammenligner email fra user-parametren til at kigge listen igennem.
+        //Hvis der findes en med samme email, sættes validation til false. Hvis ikke der findes en bruger med samme email oprettes et nyt document i userCollection.
+        //Returnerer en bool alt efter "resultatet" af forsøget på at oprette en bruger.
         public bool AddUser(User user)
         {
             var compareList = GetAll();
@@ -64,9 +68,5 @@ namespace API.Repositories.UserRepository
             } 
             return validation;
         }
-
-        //public Task<bool> Login(string EmailAddress, string Password, List<User> list);
-
-
     }
 }
