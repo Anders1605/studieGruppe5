@@ -6,7 +6,7 @@ namespace API.Repositories.ListingsRepository
     {
         public List<Listing> GetAll();
         
-        public Listing GetAllByUserId(int id);
+        public List<Listing> GetAllByUserId();
 
         public bool AddListing (Listing listing);
     }

@@ -23,14 +23,9 @@ namespace API.Controllers
             return listingRepoMongoDB.GetAll();
         }
 
-        /*public IEnumerable<Listing> GetAllByUserId()
+        public IEnumerable<Listing> GetAllByUserId()
         {
-            return listingRepoMongoDB.GetAllByUserID();
+            return listingRepoMongoDB.GetAllByUserId();
         }
-
-        En til med GetAll by UserID
-         Marketplace skal have listings på den
-         */
-        
     }
 }
