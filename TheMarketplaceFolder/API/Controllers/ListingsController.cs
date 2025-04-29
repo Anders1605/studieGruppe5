@@ -10,22 +10,33 @@ namespace API.Controllers
     [ApiController]
     public class ListingsController : ControllerBase
     {
-        private IListingsRepository listingRepoMongoDB;
+        private IListingsRepository listingsRepositoryMongoDB;
 
-        public ListingsController(IListingsRepository listingRepoMongoDB)
+        public ListingsController(IListingsRepository listingRepositoryMongoDB)
         {
-            this.listingRepoMongoDB = listingRepoMongoDB;
+            this.listingsRepositoryMongoDB = listingsRepositoryMongoDB;
         }
 
         [HttpGet]
         public IEnumerable<Listing> Get()
         {
-            return listingRepoMongoDB.GetAll();
+            return listingsRepositoryMongoDB.GetAll();
         }
 
         public IEnumerable<Listing> GetAllByUserId()
         {
-            return listingRepoMongoDB.GetAllByUserId();
+            return listingsRepositoryMongoDB.GetAllByUserId();
         }
+
+        [HttpPost]
+        public IActionResult AddListings([FromBody] Listing newList)
+        {
+            var success = listingsRepositoryMongoDB.AddListings(newList);
+            if (success)
+                return Ok(newList);
+            else
+                return StatusCode(500, "Could not add listing");
+        }
+
     }
 }

@@ -2,12 +2,13 @@
 using Shared.Models;
 
 namespace API.Repositories.ListingsRepository
+
 {
-    public class LisitingsRepositoryMongoDB
+    public class ListingsRepositoryMongoDB : IListingsRepository
     {
         private IMongoCollection<Listing> listingsCollection;
 
-        public LisitingsRepositoryMongoDB()
+        public ListingsRepositoryMongoDB()
         {
 
             IMongoClient client;
@@ -46,9 +47,23 @@ namespace API.Repositories.ListingsRepository
             return listingsCollection.Find(noFilter).ToList();
         }
 
-        public void Add(Listing newList)
+        public List<Listing> GetAllByUserId()
         {
-            listingsCollection.InsertOne(newList); 
+            var noFilter = Builders<Listing>.Filter.Empty;
+            return listingsCollection.Find(noFilter).ToList();
+        }
+
+        public bool AddListings(Listing newList)
+        {
+            try
+            {
+                listingsCollection.InsertOne(newList);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         
     }

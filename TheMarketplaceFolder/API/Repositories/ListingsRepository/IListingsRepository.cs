@@ -8,6 +8,6 @@ namespace API.Repositories.ListingsRepository
         
         public List<Listing> GetAllByUserId();
 
-        public bool AddListing (Listing listing);
+        public bool AddListings (Listing listing);
     }
 }
