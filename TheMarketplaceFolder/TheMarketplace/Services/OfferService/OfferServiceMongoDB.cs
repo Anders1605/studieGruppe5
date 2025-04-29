@@ -26,7 +26,7 @@ namespace TheMarketplace.Services.OfferService
 
         public async Task SubmitOffer(Listing ListingToSubmitOfferTo, User userSubmittingOffer)
         {
-            await httpClient.PutAsJsonAsync<Tuple<Listing, User>>(baseURI, new Tuple<Listing, User>(ListingToSubmitOfferTo, userSubmittingOffer));
+            await httpClient.PutAsJsonAsync<Tuple<Listing, User>>(baseURI +"/SubmitOffer", new Tuple<Listing, User>(ListingToSubmitOfferTo, userSubmittingOffer));
         }
     }
 
