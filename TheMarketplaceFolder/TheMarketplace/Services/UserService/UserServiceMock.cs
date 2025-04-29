@@ -25,7 +25,7 @@ namespace TheMarketplace.Services.UserService
             LocalStorage = localStorage;
         }
 
-        public void createUser(User newUser)
+        public Task createUser(User newUser)
         {
             Console.WriteLine($"New user is as follows:Name: {newUser.Name} \n TelephoneNumber: {newUser.TelephoneNumber} \n Address: {newUser.Address} \n Emailaddress: {newUser.EmailAddress} \n Password: {newUser.Password} \n ProfilePictureUrl: {newUser.ProfilePictureUrl} \n ---");
             users.Add(newUser);
@@ -36,6 +36,7 @@ namespace TheMarketplace.Services.UserService
             }
             SetMockUsersAsync();
             Console.WriteLine("Localstorage was updated");
+            return null;
         }
 
         public bool UpdateLoggedInMock(bool validation)
@@ -96,6 +97,16 @@ namespace TheMarketplace.Services.UserService
                 UpdateLoggedInMock(validation);
             }
                 return loggedInMock;
+        }
+
+        Task<User> IUserService.LoginMongoDB(string EmailAddress, string Password)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<bool> IUserService.CheckLogin()
+        {
+            throw new NotImplementedException();
         }
     }
 }

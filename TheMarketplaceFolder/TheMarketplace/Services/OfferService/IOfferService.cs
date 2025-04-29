@@ -6,7 +6,7 @@ namespace TheMarketplace.Services.OfferService
     {
         public Task SubmitOffer(Listing ListingToSubmitOfferTo, User userSubmittingOffer);
 
-        public Task AcceptOffer(Offer offerToAccept);
+        public Task AcceptOffer(Offer offerToAccept,int listingId);
 
         public Task<List<Listing>> GetAllListingsWithOffers(User userToFindOffersFor);
     }

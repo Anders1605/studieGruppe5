@@ -39,6 +39,12 @@ namespace TheMarketplace.Services.OfferService
                 Buyer = MockBuyer,
             };
 
+            Offer MockOffer2 = new Offer()
+            {
+                OfferId = 2,
+                Buyer = MockBuyer,
+            };
+
             MockListings = new List<Listing>()
             {
                 new Listing()
@@ -50,7 +56,9 @@ namespace TheMarketplace.Services.OfferService
                     Status ="Testing",
                     Title = "test1",
                     UserEmbedded = MockSeller,
-                    OfferEmbedded = MockOffer1
+                    OfferEmbedded = new List<Offer>{
+                    MockOffer1
+                    }
                 },
 
                 new Listing()
@@ -62,16 +70,37 @@ namespace TheMarketplace.Services.OfferService
                     Status ="Testing",
                     Title = "test2",
                     UserEmbedded = MockSeller,
+                    OfferEmbedded = new List<Offer>{
+                        MockOffer2
+                    }
+                },
+
+                 new Listing()
+                {
+                    ListingId = 3,
+                    Category ="test",
+                    Description = "test",
+                    Price = 100,
+                    Status ="Testing",
+                    Title = "test3",
+                    UserEmbedded = MockSeller,
                 }
             };
 
 
         }
 
-        public Task AcceptOffer(Offer offerToAccept)
+        //Too many code changes for this to work right now.
+        //public Task AcceptOffer(Offer offerToAccept)
+        //{
+        //    Console.WriteLine(offerToAccept.OfferId);
+        //    MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).First().OfferEmbedded.OfferAccepted = true;
+        //    return Task.CompletedTask;
+        //}
+
+        public Task AcceptOffer(Offer offer, int id)
         {
-            MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).Single().OfferEmbedded.OfferAccepted = true;
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
 
         public async Task<List<Listing>> GetAllListingsWithOffers(User userToFindOffersFor)
@@ -79,13 +108,14 @@ namespace TheMarketplace.Services.OfferService
             return await Task.FromResult(MockListings.FindAll(x => x.UserEmbedded.EmailAddress == userToFindOffersFor.EmailAddress && x.OfferEmbedded is not null));
         }
 
+
         public Task SubmitOffer(Listing listingToSubmitOfferTo, User userSubmittingOffer)
         {
-            MockListings.Find(x => x == listingToSubmitOfferTo).OfferEmbedded = new Offer()
+            MockListings.Find(x => x == listingToSubmitOfferTo).OfferEmbedded.Add(new Offer()
             {
-                OfferId = 2,
+                OfferId = 3,
                 Buyer = userSubmittingOffer,
-            };
+            });
             return Task.CompletedTask;
         }
     }

@@ -5,9 +5,10 @@
 @inject IOfferService offerService;
 
 
-<h3>MyOffers</h3>
+<h3>My Offers</h3>
 
-@if (ListingOffers is not null)
+@* Old Code: *@
+@* @if (ListingOffers is not null)
 {
     @foreach (var item in ListingOffers)
     {
@@ -36,7 +37,62 @@
     }
     <button @onclick="ButtonTestClick"> This is a test </button>
 
+} *@
+
+@* ChatGPT Styled code *@
+@if (ListingOffers is not null)
+{
+    <h3>Pending Offers</h3>
+    @foreach (var listing in ListingOffers)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group">
+                    @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is false))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5>@listing.Title</h5>
+                                <p>Price: @listing.Price</p>
+                                <p>Buyer: @offer.Buyer.Name</p>
+                            </div>
+                            <button class="btn btn-success" @onclick="() => AcceptOffer(offer,listing.ListingId)">
+                                Accept Offer
+                            </button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    <h3>Accepted Offers</h3>
+    @foreach (var listing in ListingOffers)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group">
+                    @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is true))
+                    {
+                        <li class="list-group-item">
+                            <h5>@listing.Title</h5>
+                            <p>Price: @listing.Price</p>
+                            <p>Buyer: @offer.Buyer.Name</p>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+
+    @* test for submitting offer, needs to be added to Listing Page, this line of code is difficult to test, since the offerService only fetches listingoffers. *@
+    <button class="btn btn-warning mt-3" @onclick="() =>SubmitOffer(ListingOffers[2])">Submit a test offer</button>
 }
+@if (ListingOffers is null)
+{
+    <p>You have no offers waiting!</p>
+}
+
 
 @code {
 
@@ -46,9 +102,9 @@
 
     public User MockSeller;
 
-    protected override async void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
+        await base.OnInitializedAsync();
 
         MockBuyer = new User()
             {
@@ -72,19 +128,27 @@
 
         ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
 
+        ListingOffers.ForEach(x => Console.WriteLine(x.Title));
+
         Console.WriteLine(ListingOffers.Count);
     }
 
     public void ButtonTestClick()
     {
-        Debug.WriteLine("This is a test");
+        Console.WriteLine("This is a test");
     }
 
-    public async void AcceptOffer(Offer offerToAccept)
+    public async void AcceptOffer(Offer offerToAccept, int listingId)
     {
-        await offerService.AcceptOffer(offerToAccept);
+        await offerService.AcceptOffer(offerToAccept, listingId);
         ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
         Debug.WriteLine(ListingOffers.Count);
-
     }
+
+    public async void SubmitOffer(Listing itemToSubmitOfferFor)
+    {
+        await offerService.SubmitOffer(itemToSubmitOfferFor, MockBuyer);
+        ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
+    }
+
 }
