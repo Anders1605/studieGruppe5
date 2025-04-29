@@ -3,19 +3,22 @@
 @using Modals
 @inject Services.UserService.IUserService mUserService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject NavigationManager navMan
 
 <!--Modal button-->
+<div style="position: fixed; top: 0.5rem; right: 1rem; z-index: 1050;">
 @if (!loggedIn)
 {
-    <button type="button" class="btn btn-success" @onclick="openModal">
+    <button type="button" class="btn btn-outline-success" @onclick="openModal">
         Login
     </button>
 } else
 {
-    <button type="button" class="btn btn-secondary" @onclick="onClickLogOut">
+    <button type="button" class="btn btn-outline-danger" @onclick="onClickLogOut">
         Logout
     </button>
 }
+</div>
 
 <!--Backdrop for modal-->
 @if (modalVisible)
@@ -55,7 +58,26 @@
     </div>
 </div>
 
+@if (showToast)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" @onclick="() => showToast = false" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                User successfully created!
+            </div>
+        </div>
+    </div>
+}
+
 @code {
+    [Parameter]
+    public EventCallback<bool> OnLoginChanged { get; set; }
+
     private List<User>? mockUsers;
     private User? userLoggedIn;
     public string loginEmail;
@@ -63,6 +85,7 @@
     public bool loginError;
     bool modalVisible = false;
     bool loggedIn;
+    private bool showToast = false;
     string buttonText => loggedIn ? "Log out" : "Login";
 
     protected override async Task OnInitializedAsync()
@@ -93,6 +116,8 @@
         {
             Console.WriteLine($"Logged In");
             loggedIn = true;
+            await OnLoginChanged.InvokeAsync(true);
+            await ShowToast();
             closeModal();
         } else
         {
@@ -107,7 +132,20 @@
     {
         await LocalStorage.RemoveItemAsync("User Signed In");
         Console.WriteLine($"Logout called");
-        closeModal();
+        await OnLoginChanged.InvokeAsync(false);
+        navMan.NavigateTo("/");
+        StateHasChanged();
+    }
+
+    public async Task ShowToast()
+    {
+        // Renderer toast
+        showToast = true;
+        StateHasChanged();
+        //Viser toast i 3 sekunder (ms)
+        await Task.Delay(3000);
+        //Skjuler toast
+        showToast = false;
         StateHasChanged();
     }
 }

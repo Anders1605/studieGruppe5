@@ -56,23 +56,36 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" @onclick="closeModal">Close</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-success">Submit</button>
                 </div>
             </EditForm>
         </div>
     </div>
 </div>
 
+@if (showToast)
+{
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <strong class="me-auto">Success</strong>
+                <small>Just now</small>
+                <button type="button" class="btn-close" @onclick="() => showToast = false" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+                User successfully created!
+            </div>
+        </div>
+    </div>
+}
+
+
 @code {
     private List<User>? mockUsers;
     bool modalVisible = false;
     bool loggedIn;
+    private bool showToast = false;
     User newUser = new();
-    //Problem: Efter tilføjelse af ny bruger bliver brugeren umiddelbart ikke genkendt ved login. Ukendt fejl.
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
 
     private async Task onSubmit()
     {
@@ -80,6 +93,19 @@
         Console.WriteLine("User was created in DB");
         newUser = new();
         closeModal();
+        await ShowToast();
+    }
+
+    public async Task ShowToast()
+    {
+        // Renderer toast
+        showToast = true;
+        StateHasChanged(); 
+        //Viser toast i 3 sekunder (ms)
+        await Task.Delay(3000); 
+        //Skjuler toast
+        showToast = false;
+        StateHasChanged();
     }
 
     private void closeModal()

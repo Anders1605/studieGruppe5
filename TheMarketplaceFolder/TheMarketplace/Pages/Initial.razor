@@ -2,6 +2,7 @@
 @using Services
 @using Shared.Models
 @using Modals
+@inject NavigationManager navMan
 @inject Services.UserService.IUserService mUserService
 @inject Blazored.LocalStorage.ILocalStorageService LocalStorage
 
@@ -10,7 +11,7 @@
 {
     <h2>Welcome to ‘The Marketplace’ at BAAA!</h2>
     <p>Discover The Marketplace — Where smart savings meet sustainable living. Buy and sell second-hand goods to reduce waste, cut costs, and give quality items a second life.</p>
-    <TheMarketplace.Modals.LoginModal/>
+    <TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
 
 }
 else
@@ -21,7 +22,7 @@ else
         Once you’ve created a user, you will be able to view items for sale, list your own items and of course purchase items of your choosing. 
         BAAA will make some storage available as needed, further details can be read in the ”Storage”-tab upon logging in.</p>
 
-    <TheMarketplace.Modals.LoginModal/>
+    <TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
     <TheMarketplace.Modals.SignUpModal />
 }
 
@@ -30,12 +31,15 @@ else
 
 @code {
     bool loggedIn;
+    private async Task HandleLoginChanged(bool isLoggedIn)
+    {
+        loggedIn = isLoggedIn;
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
         loggedIn = await mUserService.CheckLogin();
     }
-    //Siden opdaterer ikke når man har trykket login, så loggedIn bliver ikke ændret. Løsning mangler. 
-
 }
 
