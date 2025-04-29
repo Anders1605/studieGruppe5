@@ -68,7 +68,7 @@
                 <button type="button" class="btn-close" @onclick="() => showToast = false" aria-label="Close"></button>
             </div>
             <div class="toast-body">
-                User successfully created!
+                Login successful!
             </div>
         </div>
     </div>
@@ -108,7 +108,7 @@
         modalVisible = true;
     }
 
-    private async void onClickLogin()
+    private async Task onClickLogin()
     {
         userLoggedIn = await mUserService.LoginMongoDB(loginEmail, loginPW);
         await LocalStorage.SetItemAsync<User>("User Signed In", userLoggedIn);
@@ -117,8 +117,8 @@
             Console.WriteLine($"Logged In");
             loggedIn = true;
             await OnLoginChanged.InvokeAsync(true);
-            await ShowToast();
             closeModal();
+            await ShowToast();
         } else
         {
             loggedIn = false;
@@ -128,7 +128,7 @@
         StateHasChanged();
     }
 
-    private async void onClickLogOut()
+    private async Task onClickLogOut()
     {
         await LocalStorage.RemoveItemAsync("User Signed In");
         Console.WriteLine($"Logout called");

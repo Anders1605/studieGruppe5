@@ -11,8 +11,6 @@
 {
     <h2>Welcome to ‘The Marketplace’ at BAAA!</h2>
     <p>Discover The Marketplace — Where smart savings meet sustainable living. Buy and sell second-hand goods to reduce waste, cut costs, and give quality items a second life.</p>
-    <TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
-
 }
 else
 {
@@ -22,11 +20,11 @@ else
         Once you’ve created a user, you will be able to view items for sale, list your own items and of course purchase items of your choosing. 
         BAAA will make some storage available as needed, further details can be read in the ”Storage”-tab upon logging in.</p>
 
-    <TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
+    
     <TheMarketplace.Modals.SignUpModal />
 }
 
-
+<TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
 
 
 @code {
