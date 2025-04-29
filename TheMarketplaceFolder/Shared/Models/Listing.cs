@@ -4,11 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
 namespace Shared.Models
 
 {
     public class Listing
     {
+        [BsonId]
+        public ObjectId Id { get; set; }  // MongoDB will handle the _id automatically
+
         public int ListingId { get; set; }
 
         /*Lånt fra Oles github*/
@@ -27,7 +32,7 @@ namespace Shared.Models
 
         public string Status { get; set; }
 
-        public Offer? OfferEmbedded { get; set; }
+        public List<Offer>? OfferEmbedded { get; set; }
 
         public Location? LocationEmbedded { get; set; }
 

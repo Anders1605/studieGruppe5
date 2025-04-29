@@ -4,7 +4,7 @@ namespace API.Repositories.OfferRepository
 {
     public interface IOfferRepository
     {
-        public Task AcceptOfferAsync(Offer offer);
+        public Task AcceptOfferAsync(Offer offer, int listingId);
 
         public Task SubmitOfferAsync(Listing listingToAddOfferTo, User user);
 

@@ -56,7 +56,9 @@ namespace TheMarketplace.Services.OfferService
                     Status ="Testing",
                     Title = "test1",
                     UserEmbedded = MockSeller,
-                    OfferEmbedded = MockOffer1
+                    OfferEmbedded = new List<Offer>{
+                    MockOffer1
+                    }
                 },
 
                 new Listing()
@@ -68,7 +70,9 @@ namespace TheMarketplace.Services.OfferService
                     Status ="Testing",
                     Title = "test2",
                     UserEmbedded = MockSeller,
-                    OfferEmbedded = MockOffer2
+                    OfferEmbedded = new List<Offer>{
+                        MockOffer2
+                    }
                 },
 
                  new Listing()
@@ -86,11 +90,17 @@ namespace TheMarketplace.Services.OfferService
 
         }
 
-        public Task AcceptOffer(Offer offerToAccept)
+        //Too many code changes for this to work right now.
+        //public Task AcceptOffer(Offer offerToAccept)
+        //{
+        //    Console.WriteLine(offerToAccept.OfferId);
+        //    MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).First().OfferEmbedded.OfferAccepted = true;
+        //    return Task.CompletedTask;
+        //}
+
+        public Task AcceptOffer(Offer offer, int id)
         {
-            Console.WriteLine(offerToAccept.OfferId);
-            MockListings.Where(x => x.OfferEmbedded.OfferId == offerToAccept.OfferId).First().OfferEmbedded.OfferAccepted = true;
-            return Task.CompletedTask;
+            throw new NotImplementedException();
         }
 
         public async Task<List<Listing>> GetAllListingsWithOffers(User userToFindOffersFor)
@@ -101,11 +111,11 @@ namespace TheMarketplace.Services.OfferService
 
         public Task SubmitOffer(Listing listingToSubmitOfferTo, User userSubmittingOffer)
         {
-            MockListings.Find(x => x == listingToSubmitOfferTo).OfferEmbedded = new Offer()
+            MockListings.Find(x => x == listingToSubmitOfferTo).OfferEmbedded.Add(new Offer()
             {
                 OfferId = 3,
                 Buyer = userSubmittingOffer,
-            };
+            });
             return Task.CompletedTask;
         }
     }

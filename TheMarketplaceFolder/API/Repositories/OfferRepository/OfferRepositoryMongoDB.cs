@@ -42,20 +42,22 @@ namespace API.Repositories.OfferRepository
 
         }
 
-        
+
         /// <summary>
         /// Accepts an offer, requested by a user (seller)
         /// </summary>
         /// <param name="offer"></param>
         /// <returns></returns>
-        public async Task AcceptOfferAsync(Offer offer)
+        public async Task AcceptOfferAsync(Offer offer, int listingId)
         {
-            var filterListing = Builders<Listing>.Filter.Eq(x => x.OfferEmbedded.OfferId, offer.OfferId);
+
+            var filterListing = Builders<Listing>.Filter.And(Builders<Listing>.Filter.Eq(x => x.ListingId,listingId),
+                Builders<Listing>.Filter.Eq("OfferEmbedded.OfferId", offer.OfferId)
+                );
 
             var filterOffer = Builders<Offer>.Filter.Eq(x => x.OfferId, offer.OfferId);
 
-
-            var updateListing = Builders<Listing>.Update.Set(x => x.OfferEmbedded.OfferAccepted, true);
+            var updateListing = Builders<Listing>.Update.Set("OfferEmbedded.$.OfferAccepted", true);
 
             var updateOffer = Builders<Offer>.Update.Set(x => x.OfferAccepted, true);
 
@@ -82,9 +84,10 @@ namespace API.Repositories.OfferRepository
         /// <returns></returns>
         public async Task<List<Listing>> GetListingsWithOffersForUserAsync(string userEmailAddress)
         {
-            return _listingsCollection.AsQueryable()
-                .Where(x => x.UserEmbedded.EmailAddress == userEmailAddress && (x.OfferEmbedded != null && x.OfferEmbedded.OfferAccepted!))
-                .ToList();
+            var filter = Builders<Listing>.Filter.Eq(x => x.UserEmbedded.EmailAddress, userEmailAddress);
+
+            var result = await _listingsCollection.FindAsync(filter).Result.ToListAsync();
+            return result;
         }
 
         /// <summary>
@@ -107,7 +110,7 @@ namespace API.Repositories.OfferRepository
 
             var filterListing = Builders<Listing>.Filter.Eq(x => x.ListingId, listingToSubmitOfferTo.ListingId);
 
-            var updateListing = Builders<Listing>.Update.Set(x => x.OfferEmbedded, offer);
+            var updateListing = Builders<Listing>.Update.AddToSet<Offer>(x => x.OfferEmbedded, offer);
 
             await _listingsCollection.UpdateOneAsync(filterListing, updateListing);
         }

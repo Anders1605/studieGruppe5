@@ -7,16 +7,16 @@ namespace TheMarketplace.Services.OfferService
     public class OfferServiceMongoDB : IOfferService
     {
         HttpClient httpClient;
-        string baseURI = "https://localhost:7107/api/OfferController";
+        string baseURI = "https://localhost:7107/api/Offer";
 
         public OfferServiceMongoDB(HttpClient httpClient)
         {
             this.httpClient = httpClient;
         }
 
-        public async Task AcceptOffer(Offer offerToAccept)
+        public async Task AcceptOffer(Offer offerToAccept, int listingId)
         {
-            await httpClient.PostAsJsonAsync<Offer>(baseURI +"/AcceptOffer", offerToAccept);
+            await httpClient.PostAsJsonAsync<Offer>(baseURI +$"/AcceptOffer/{listingId}", offerToAccept);
         }
 
         public async Task<List<Listing>> GetAllListingsWithOffers(User userToFindOffersFor)

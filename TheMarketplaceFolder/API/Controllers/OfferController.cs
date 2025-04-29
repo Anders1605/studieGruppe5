@@ -17,31 +17,32 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("/GetOffersForUser/{userEmailAddress}")]
-        public async Task<List<Listing>> GetOffersForUserAsync([FromRoute] string userEmailAddress)
+        [Route("GetOffersForUser/{userEmailAddress}")]
+        public async Task<List<Listing>> GetOffersForUserAsync(string userEmailAddress)
         {
-            return await _offerRepository.GetListingsWithOffersForUserAsync(userEmailAddress);
+            var result = await _offerRepository.GetListingsWithOffersForUserAsync(userEmailAddress);
+            return result;
         }
 
         [HttpGet]
-        [Route("/GetOfferForListing{listingId}")]
-        public async Task<List<Listing>> GetOffersForListingAsync([FromRoute] string listingId)
+        [Route("GetOfferForListing{listingId}")]
+        public async Task<List<Listing>> GetOffersForListingAsync( string listingId)
         {
             return await _offerRepository.GetOffersForListingAsync(listingId);
         }
 
         [HttpPut]
-        [Route("/SubmitOffer")]
+        [Route("SubmitOffer")]
         public async Task SubmitOffer([FromBody] Tuple<Listing, User> tuple)
         {
             await _offerRepository.SubmitOfferAsync(tuple.Item1, tuple.Item2);
         }
 
         [HttpPost]
-        [Route("/AcceptOffer")]
-        public async Task AcceptOffer(Offer offer)
+        [Route("AcceptOffer/{listingId}")]
+        public async Task AcceptOffer([FromBody] Offer offer, int listingId)
         {
-            await _offerRepository.AcceptOfferAsync(offer);
+            await _offerRepository.AcceptOfferAsync(offer,listingId);
         }
     }
 }
