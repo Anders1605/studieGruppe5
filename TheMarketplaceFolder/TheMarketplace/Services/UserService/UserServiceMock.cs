@@ -108,5 +108,10 @@ namespace TheMarketplace.Services.UserService
         {
             throw new NotImplementedException();
         }
+
+        public Task<User> GetLoggedInUser()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

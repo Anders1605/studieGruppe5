@@ -2,96 +2,72 @@
 @using Services.OfferService;
 @using Shared.Models;
 @using System.Diagnostics
+@using TheMarketplace.Services.UserService
 @inject IOfferService offerService;
-
+@inject IUserService userService;
+@inject NavigationManager navMan
 
 <h3>My Offers</h3>
-
-@* Old Code: *@
-@* @if (ListingOffers is not null)
+@if (loggedIn)
 {
-    @foreach (var item in ListingOffers)
+    @if (ListingOffers is not null)
     {
-        <p>List of all offers</p>
-        <ol>
-            @if (item.OfferEmbedded is not null && item.OfferEmbedded.OfferAccepted is false)
-            {
-                <li>
-                    <p>@item.Title</p>
-                    <p>@item.Price</p>
-                    <p>@item.OfferEmbedded.Buyer.Name</p>
-
-                    <button class="btn btn-primary" @onclick="() => AcceptOffer(item.OfferEmbedded)"> Accept Offer</button>
-                </li>
-            }
-        </ol>
-
-        <p>List of accepted offers</p>
-
-        if (item.OfferEmbedded is not null && item.OfferEmbedded.OfferAccepted is true)
+        <h3>Pending Offers</h3>
+        @foreach (var listing in ListingOffers)
         {
-            <p>@item.Title</p>
-            <p>@item.Price</p>
-            <p>@item.OfferEmbedded.Buyer.Name</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is false))
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h5>@listing.Title</h5>
+                                    <p>Price: @listing.Price</p>
+                                    <p>Buyer: @offer.Buyer.Name</p>
+                                </div>
+                                <button class="btn btn-success" @onclick="() => AcceptOffer(offer,listing.ListingId)">
+                                    Accept Offer
+                                </button>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
         }
-    }
-    <button @onclick="ButtonTestClick"> This is a test </button>
 
-} *@
-
-@* ChatGPT Styled code *@
-@if (ListingOffers is not null)
-{
-    <h3>Pending Offers</h3>
-    @foreach (var listing in ListingOffers)
-    {
-        <div class="row">
-            <div class="col-md-6">
-                <ul class="list-group">
-                    @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is false))
-                    {
-                        <li class="list-group-item d-flex justify-content-between align-items-start">
-                            <div>
+        <h3>Accepted Offers</h3>
+        @foreach (var listing in ListingOffers)
+        {
+            <div class="row">
+                <div class="col-md-6">
+                    <ul class="list-group">
+                        @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is true))
+                        {
+                            <li class="list-group-item">
                                 <h5>@listing.Title</h5>
                                 <p>Price: @listing.Price</p>
                                 <p>Buyer: @offer.Buyer.Name</p>
-                            </div>
-                            <button class="btn btn-success" @onclick="() => AcceptOffer(offer,listing.ListingId)">
-                                Accept Offer
-                            </button>
-                        </li>
-                    }
-                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
             </div>
-        </div>
-    }
+        }
 
-    <h3>Accepted Offers</h3>
-    @foreach (var listing in ListingOffers)
+        @* test for submitting offer, needs to be added to Listing Page, this line of code is difficult to test, since the offerService only fetches listingoffers. *@
+        <button class="btn btn-warning mt-3" @onclick="() =>SubmitOffer(ListingOffers[2])">Submit a test offer</button>
+    }
+    @if (ListingOffers is null)
     {
-        <div class="row">
-            <div class="col-md-6">
-                <ul class="list-group">
-                    @foreach (var offer in listing.OfferEmbedded.Where(x => x.OfferAccepted is true))
-                    {
-                        <li class="list-group-item">
-                            <h5>@listing.Title</h5>
-                            <p>Price: @listing.Price</p>
-                            <p>Buyer: @offer.Buyer.Name</p>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </div>
+        <p>You have no offers waiting!</p>
     }
-
-    @* test for submitting offer, needs to be added to Listing Page, this line of code is difficult to test, since the offerService only fetches listingoffers. *@
-    <button class="btn btn-warning mt-3" @onclick="() =>SubmitOffer(ListingOffers[2])">Submit a test offer</button>
 }
-@if (ListingOffers is null)
+@if (loggedIn!)
 {
-    <p>You have no offers waiting!</p>
+    <TheMarketplace.Modals.LoginModal OnLoginChanged="HandleLoginChanged" />
 }
+
 
 
 @code {
@@ -100,11 +76,29 @@
 
     public User MockBuyer;
 
+    public User? UserLoggedIn;
+
     public User MockSeller;
+
+    public bool loggedIn;
+
+    private async Task HandleLoginChanged(bool isLoggedIn)
+    {
+        loggedIn = isLoggedIn;
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        loggedIn = await userService.CheckLogin();
+
+        if (!loggedIn)
+        {
+            navMan.NavigateTo("/");
+        }
+
+        UserLoggedIn = await userService.GetLoggedInUser();
 
         MockBuyer = new User()
             {
@@ -126,9 +120,7 @@
                 TelephoneNumber = "0987654321"
             };
 
-        ListingOffers = await offerService.GetAllListingsWithOffers(MockSeller);
-
-        ListingOffers.ForEach(x => Console.WriteLine(x.Title));
+        ListingOffers = await offerService.GetAllListingsWithOffers(UserLoggedIn);
 
         Console.WriteLine(ListingOffers.Count);
     }
