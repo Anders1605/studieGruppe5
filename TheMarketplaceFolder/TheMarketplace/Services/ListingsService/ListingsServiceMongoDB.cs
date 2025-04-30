@@ -1,6 +1,5 @@
 ﻿using Blazored.LocalStorage;
 using Shared.Models;
-using TheMarketplace.Services.ListingsService;
 using System.Net.Http.Json;
 
 
@@ -8,8 +7,9 @@ using System.Net.Http.Json;
 namespace TheMarketplace.Services.ListingsService
 
 {
-    public class ListingsServiceMongoDB : ILisitingService
+    public class ListingsServiceMongoDB /*: ILisitingService*/
     {
+        
         private string serverUrl = "https://localhost:7107";
  
         private HttpClient _client;
@@ -18,7 +18,26 @@ namespace TheMarketplace.Services.ListingsService
         {
             _client = client;
         }
-        public Task<Listing[]> GetAll()
+
+        /*public async Task GetAll()
+        {
+        }*/
+        
+        public async Task GetAllByUserId()
+        {
+        }
+        
+        public async Task AddListing()
+        {
+        }
+
+        //---------------------------------------------
+        /*public Task<Listing[]> GetAll()
+        {
+            throw new NotImplementedException();
+        }*/
+
+        public Task<Listing> GetListingById(string id)
         {
             throw new NotImplementedException();
         }
@@ -27,5 +46,5 @@ namespace TheMarketplace.Services.ListingsService
         {
             throw new NotImplementedException();
         }
-    }
+}
 }

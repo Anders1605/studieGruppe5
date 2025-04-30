@@ -12,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 builder.Services.AddScoped<IUserService, UserServiceMongoDB>();
 
-builder.Services.AddScoped<ILisitingService, ListingsServiceMongoDB >();
+builder.Services.AddScoped<ILisitingService, ListingsServiceMock /*, ListingsServiceMongoDB*/ >();
 
 builder.Services.AddScoped<IOfferService, OfferServiceMongoDB>();
 
