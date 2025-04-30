@@ -56,5 +56,11 @@ namespace TheMarketplace.Services.UserService
         {
             throw new NotImplementedException();
         }
+
+        public async Task<User>? GetLoggedInUser()
+        {
+            User? loggedInUser = await LocalStorage.GetItemAsync<User>("User Signed In");
+            return loggedInUser;
+        }
     }
 }
